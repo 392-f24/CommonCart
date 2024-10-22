@@ -1,19 +1,18 @@
 .App-header {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensures the content area takes up full viewport height */
+  min-height: 100vh; 
 }
 
 .content {
-  flex-grow: 1; /* Allows the content to expand and fill the remaining space */
-  padding-bottom: 60px; /* Ensures the content doesn't overlap with the fixed navbar */
+  flex-grow: 1;
+  background-color: #374863;
 }
-
-.navbar {
-  position: fixed; /* Fixes the navbar at the bottom of the screen */
-  bottom: 0; /* Anchors the navbar to the bottom */
-  width: 100%; /* Ensures the navbar stretches across the entire page width */
-  z-index: 1000; /* Ensures the navbar stays above other content */
-  background-color: lightgreen; /* Just as an example background */
+/* .navbar {
+  position: fixed; 
+  bottom: 0; 
+  width: 100%; 
+  z-index: 1000; 
+  background-color: lightgreen; 
   height: 60px;
-}
+} */

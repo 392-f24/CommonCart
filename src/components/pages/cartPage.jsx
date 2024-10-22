@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-
+import './cartPage.css'
 
 const CartPage = () => {
     const navigate = useNavigate();

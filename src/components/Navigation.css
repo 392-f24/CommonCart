@@ -1,6 +1,6 @@
 .bottom-nav {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    grid-template-columns: 1fr 1fr; 
     justify-content: space-between;
     align-items: center;
     background-color: #FAC16B;
@@ -9,17 +9,37 @@
   
   .cartNav, .receiptNav {
     display: flex;
-    justify-content: center; /* Centers the links horizontally within each grid column */
-    align-items: center; /* Centers the links vertically */
+    justify-content: center; 
+    align-items: center;
     height: 100%;
   }
   
   .cartNav {
-    grid-column: 1; /* Places Cart in the first column */
+    grid-column: 1; 
   }
   
   .receiptNav {
-    grid-column: 2; /* Places Receipt in the second column */
+    grid-column: 2;
+  }
+
+  .navLinkContent {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+  }
+  .nav-item {
+    text-decoration: none;
+  }
+
+  .navText {
+    font-size: 14px;
+    color: black;
+    margin-top: 5px;
+    text-decoration: none;
+  }
+  .selectedText{
+    color: white;
   }
   
   
