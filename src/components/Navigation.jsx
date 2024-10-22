@@ -97,15 +97,6 @@ const Navigationbar = () => {
             />
           </Nav.Link>
 
-          <Nav.Link className="profileNav">
-            {/* <NavLink to="/receipts">
-              <p className="navText">Receipt</p>
-            </NavLink> */}
-            <ProfileLink 
-              isSelected={selectedLink === 'profile'} 
-              onClick={() => setSelectedLink('profile')} 
-            />
-          </Nav.Link>
 
         </Nav>
       </Container>
