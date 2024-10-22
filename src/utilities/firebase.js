@@ -57,23 +57,31 @@ export const useDbData = (path) => {
     return [data, error];
 };
 
-export const useDbAdd = (path) => {
-    const [result, setResult] = useState(null);
-  
-    // Given data and a key, the key is used to create a new path for the data
-    const add = async (data, key) => {
-        try {
-            console.log('Attempting to add data:', data, 'at path:', `${path}/${key}`);
-            const newRef = ref(database, `${path}/${key}`); // Use the key passed in the argument
-            console.log('New reference:', newRef);
-            await set(newRef, data); // Set data at the specified reference
-            setResult({ message: 'Request added successfully!', error: false });
-            console.log('Data added successfully!'); // Confirm successful addition
-          } catch (error) {
-            console.error('Error saving data:', error); // Log errors
-            setResult({ message: error.message, error: true });
-          }
-      };
-  
-    return [add, result];
-  };
+const makeResult = (error) => {
+    const timestamp = Date.now();
+    const message = error?.message || `Updated: ${new Date(timestamp).toLocaleString()}`;
+    return { timestamp, error, message };
+};
+
+export const useDbUpdate = (path) => {
+    const [result, setResult] = useState();
+    const updateData = useCallback(async (value) => {
+        console.log('Updating path:', path);
+        console.log('Value before update:', value);
+
+        if (!value || typeof value !== 'object') {
+            console.error("Invalid value passed to updateData:", value);
+            return;
+        }
+
+        const dbRef = ref(database, path);
+        update(dbRef, value)
+            .then(() => setResult(makeResult()))
+            .catch((error) => {
+                console.error("Error during Firebase update:", error);
+                setResult(makeResult(error));
+            });
+    }, [path]);
+
+    return [updateData, result];
+};

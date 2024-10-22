@@ -1,31 +1,29 @@
 import { Button } from 'react-bootstrap';
-import { signInWithGoogle, signOut, useDbAdd, useDbData, useAuthState } from '../utilities/firebase';
-import { useEffect } from 'react';
-
-
-const CreateNewUser = async(add) => {
-
-
-    try {
-
-        const result = await signInWithGoogle();
-        const userID = (result.user).uid;
-
-        const userData = {
-            displayName: result.user.displayName,
-            email: result.user.email,
-        };
-        await add(userData,userID);
-        console.log('Form submitted:',);
-      } catch (error) {
-        console.error("Error saving data:", error);
-      };
-}
+import { signInWithGoogle, signOut, useDbUpdate } from '../utilities/firebase';
 
 const SignIn = () => {
-    const [add] = useDbAdd('/users');
+    const [update] = useDbUpdate('/users');
 
-    return <Button onClick={() => CreateNewUser(add)}>Sing In</Button>;
+    const CreateNewUser = async() => {
+        try {
+            const result = await signInWithGoogle();
+            const userID = (result.user).uid;
+
+            const userData = {
+                [userID]:
+                {
+                    displayName: result.user.displayName,
+                    email: result.user.email
+                }
+            };
+            await(update(userData));
+            console.log('Form submitted:',);
+      } catch (error) {
+            console.error("Error saving data:", error);
+      };
+    }
+
+    return <Button onClick={() => CreateNewUser()}>Sing In</Button>;
 }
 export const SignOut = () =>(
     <Button onClick={signOut}>Sing Out</Button>
