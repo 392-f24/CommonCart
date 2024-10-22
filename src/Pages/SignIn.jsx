@@ -1,5 +1,7 @@
 import { Button } from 'react-bootstrap';
 import { signInWithGoogle, signOut, useDbUpdate } from '../utilities/firebase';
+import { OrangeButton } from '../Components/Buttons';
+import "./SignIn.css"
 
 const SignIn = () => {
     const [update] = useDbUpdate('/users');
@@ -23,7 +25,19 @@ const SignIn = () => {
       };
     }
 
-    return <Button onClick={() => CreateNewUser()}>Sing In</Button>;
+    return (
+        <div className="sign-in-page">
+            <div className="title-container">
+                <i className="cart-icon-large bi bi-cart-fill"></i>
+                <div className="title">
+                    <span className="common">Common</span>
+                    <span className="cart">Cart</span>
+                </div>
+            </div>
+            <OrangeButton onClick={() => CreateNewUser()} title={"Sign In"}/>
+        </div>
+
+    );
 }
 export const SignOut = () =>(
     <Button onClick={signOut}>Sing Out</Button>
