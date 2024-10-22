@@ -7,6 +7,7 @@ import './App.css';
 import Navigationbar from './components/Navigation';
 import CartPage from './components/pages/cartPage';
 import ReceiptPage from './components/pages/receiptPage';
+// import ProfilePage from './components/pages/profilePage';
 
 
 const App = () => {
@@ -20,6 +21,8 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<CartPage />} />
                 <Route path="/receipts" element={<ReceiptPage />} />
+                {/* <Route path="/profile" element={<ProfilePage />} /> */}
+
               </Routes>
             </div>
             <div>
