@@ -1,45 +1,43 @@
-import { useState } from 'react';
-import logo from './logo.svg';
+// import { useAuthState } from './utilities/firebase';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import SignIn from './Pages/SignIn';
+import HomePage from './Pages/Home';
+import { useAuthState } from './utilities/firebase';
 import './App.css';
 
 const App = () => {
-  const [count, setCount] = useState(0);
+  const [user, loading, error] = useAuthState(); 
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>; // Handle error if authentication fails
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button onClick={() => setCount(count => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test hot module replacement (HMR).
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  );
+    <Router>
+      <div className="App">
+        {/* If user is authenticated, show Header, Navbar, and Routes, else show SignInPage */}
+        {!user ? (
+          <SignIn />
+        ) : (
+          <>
+            <div className="content flex-grow"> 
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+              </Routes>
+            </div>
+
+          </>
+        )}
+      </div>
+    </Router>
+  ); 
 };
 
 export default App;
