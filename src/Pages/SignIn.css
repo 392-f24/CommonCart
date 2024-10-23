@@ -1,0 +1,54 @@
+.sign-in-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #374863;
+}
+
+.title-container {
+    display: flex; /* Align icon and title side by side */
+    align-items: center; /* Center align the icon with the text */
+}
+
+
+.cart-icon-large {
+    font-size: 90px;
+    color: #FAC16B;
+    margin-right: 10px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column; 
+    color: #FAC16B;
+    font-family: "Josefin Sans";
+    font-weight: 700;
+    align-items: flex-start;
+}
+.common,
+.cart {
+  font-size: 36px; 
+  margin: 0; 
+  line-height: 1; /* Adjust line height for closer spacing */
+}
+
+.custom-button {
+    background-color: #FAC16B; 
+    color:#374863;
+    font-family: "Josefin Sans";
+    border: none; 
+    border-radius: 5px; 
+    padding: 10px 20px;
+    font-size: 16px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  }
+  
+  .custom-button:hover {
+    color:#374863;
+    background-color: #e4a74b; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
