@@ -10,8 +10,8 @@ import { useAuthState } from './utilities/firebase';
 import './App.css';
 
 import Navigationbar from './components/Navigation';
-import CartPage from './components/pages/cartPage';
-import ReceiptPage from './components/pages/receiptPage';
+import CartPage from './Pages/cartPage';
+import ReceiptPage from './Pages/receiptPage';
 // import ProfilePage from './components/pages/profilePage';
 
 
