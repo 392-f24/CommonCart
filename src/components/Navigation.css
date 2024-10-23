@@ -1,89 +1,89 @@
 .bottom-nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    justify-content: space-between;
-    align-items: center;
-    background-color: #FAC16B;
-    height: 60px;
-  }
-  
-  .cartNav, .receiptNav {
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    height: 100%;
-  }
-  
-  .cartNav {
-    grid-column: 1; 
-  }
-  
-  .receiptNav {
-    grid-column: 2;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FAC16B;
+  height: 60px;
+}
 
-  .navLinkContent {
-    display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center;
-  }
-  .nav-item {
-    text-decoration: none;
-  }
+.cartNav, .receiptNav {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  height: 100%;
+}
 
-  .navText {
-    font-size: 14px;
-    color: black;
-    margin-top: 5px;
-    text-decoration: none;
-  }
-  .selectedText{
-    color: white;
-  }
+.cartNav {
+  grid-column: 1; 
+}
+
+.receiptNav {
+  grid-column: 2;
+}
+
+.navLinkContent {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+}
+.nav-item {
+  text-decoration: none;
+}
+
+.navText {
+  font-size: 14px;
+  color: black;
+  margin-top: 5px;
+  text-decoration: none;
+}
+.selectedText{
+  color: white;
+}
+
+
+/* .navbar-brand {
+  font-family: "Hepta Slab-Regular";
+}
+
+.navbar-brand img {
+  width:30px;
+  height:30px;
+}
+
+.good-neighbor {
+  padding-left: 10px;
+  padding-right:10px;
+  /* margin-bottom: 30px; 
+}
+
+.navSelectionStyle {
+  font-size: 20px;
+  line-height: 0.5;
+  /* height: 60px; 
+  margin-top:10px;
+}
+
+.homeNavStyle{
+  justify-items: center; 
+  font-family: "Hepta Slab-Regular";
+  color: #000000;
   
-  
-  /* .navbar-brand {
-    font-family: "Hepta Slab-Regular";
-  }
-  
-  .navbar-brand img {
-    width:30px;
-    height:30px;
-  }
-  
-  .good-neighbor {
-    padding-left: 10px;
-    padding-right:10px;
-    /* margin-bottom: 30px; 
-  }
-  
-  .navSelectionStyle {
-    font-size: 20px;
-    line-height: 0.5;
-    /* height: 60px; 
-    margin-top:10px;
-  }
-  
-  .homeNavStyle{
-    justify-items: center; 
-    font-family: "Hepta Slab-Regular";
-    color: #000000;
-    
-  }
-  
-  .homeNavStyle:hover{
-    color: #4B7260;
-  }
-  
-  .navPagesStyling{
-    justify-items: center; 
-  
-    padding-top: -50px;
-    font-family: "Hepta Slab-Regular";
-    color: #000000;
-  }
-  
-  .navPagesStyling:hover{
-    color: #4B7260;
-  } */
+}
+
+.homeNavStyle:hover{
+  color: #4B7260;
+}
+
+.navPagesStyling{
+  justify-items: center; 
+
+  padding-top: -50px;
+  font-family: "Hepta Slab-Regular";
+  color: #000000;
+}
+
+.navPagesStyling:hover{
+  color: #4B7260;
+} */
