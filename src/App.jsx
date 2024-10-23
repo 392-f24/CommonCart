@@ -3,15 +3,13 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import SignIn from './Pages/SignIn';
-import HomePage from './Pages/Home';
+import SignIn from './pages/SignIn';
 import { useAuthState } from './utilities/firebase';
 import './App.css';
 
 import Navigationbar from './components/Navigation';
-import CartPage from './components/pages/cartPage';
-import ReceiptPage from './components/pages/receiptPage';
-// import ProfilePage from './components/pages/profilePage';
+import CartPage from './Pages/cartPage';
+import ReceiptPage from './pages/receiptPage';
 
 
 const App = () => {
