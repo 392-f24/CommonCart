@@ -9,7 +9,8 @@ import Navbar from 'react-bootstrap/Navbar';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { faReceipt } from '@fortawesome/free-solid-svg-icons';
+import { faMoneyCheckDollar } from '@fortawesome/free-solid-svg-icons';
+import { faStore } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -35,7 +36,7 @@ const CartLink = ({ isSelected, onClick }) => {
       <NavLink to="/receipts" className="nav-item" onClick={onClick}>
         <div className="navLinkContent">
           <FontAwesomeIcon
-              icon={faReceipt}
+              icon={faMoneyCheckDollar}
               color={isSelected ? 'white' : 'black'}
               size='lg'
             />
@@ -45,21 +46,16 @@ const CartLink = ({ isSelected, onClick }) => {
     );
   };
 
-  const ProfileLink = ({ isSelected, onClick }) => {
+  const ShoppingLink = ({ isSelected, onClick }) => {
     return (
-      <NavLink to="/profile" className="nav-item" onClick={onClick}>
+      <NavLink to="/go-shopping" className="nav-item" onClick={onClick}>
         <div className="navLinkContent">
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            width="36px"
-            height="36px"
-            >
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-
-          <p className={`navText ${isSelected ? 'selectedText' : ''}`}>Profile</p>
+          <FontAwesomeIcon
+              icon={faStore}
+              color={isSelected ? 'white' : 'black'}
+              size='lg'
+            />
+          <p className={`navText ${isSelected ? 'selectedText' : ''}`}>Go Shopping</p>
         </div>
       </NavLink>
     );
@@ -84,7 +80,18 @@ const Navigationbar = () => {
             <CartLink 
               isSelected={selectedLink === 'cart'} 
               onClick={() => setSelectedLink('cart')} 
-            />          </Nav.Link>
+            />          
+          </Nav.Link>
+
+          <Nav.Link className="shoppingNav">
+            {/* <NavLink to="/receipts">
+              <p className="navText">Receipt</p>
+            </NavLink> */}
+            <ShoppingLink 
+              isSelected={selectedLink === 'go-shopping'} 
+              onClick={() => setSelectedLink('go-shopping')} 
+            />
+          </Nav.Link>
 
           <Nav.Link className="receiptNav">
             {/* <NavLink to="/receipts">
@@ -94,10 +101,6 @@ const Navigationbar = () => {
               isSelected={selectedLink === 'receipt'} 
               onClick={() => setSelectedLink('receipt')} 
             />
-          </Nav.Link>
-
-          <Nav.Link as={NavLink} to="/go-shopping">
-            <p>Go Shopping</p>
           </Nav.Link>
 
         </Nav>

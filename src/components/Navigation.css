@@ -2,7 +2,7 @@
 
 .bottom-nav {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-content: space-between;
   align-items: center;
   background-color: #FAC16B;
@@ -13,7 +13,7 @@
 }
 
 
-.cartNav, .receiptNav {
+.cartNav, .receiptNav .shoppingNav {
   display: flex;
   justify-content: center; 
   align-items: center;
@@ -24,9 +24,15 @@
   grid-column: 1; 
 }
 
-.receiptNav {
+.shoppingNav {
   grid-column: 2;
 }
+
+.receiptNav {
+  grid-column: 3;
+}
+
+
 
 .navLinkContent {
   display: flex;
