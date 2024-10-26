@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import './cartPage.css'
+import './CartPage.css'
+import { SignOut } from './SignIn';
 
 const CartPage = () => {
     const navigate = useNavigate();
@@ -7,9 +8,9 @@ const CartPage = () => {
 
   
     return (
-      <div className="cartPage">
+      <div className="cart-page">
         <p> Cart Page</p>   
-        
+        <SignOut/>
 
       </div>
     );
