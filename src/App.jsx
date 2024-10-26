@@ -25,7 +25,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="App">
+      <div className="App-header">
         {/* If user is authenticated, show Header, Navbar, and Routes, else show SignInPage */}
         {!user ? (
           <SignIn />

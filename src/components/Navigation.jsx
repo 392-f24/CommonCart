@@ -71,8 +71,8 @@ const Navigationbar = () => {
     const [selectedLink, setSelectedLink] = useState('');
     
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container >
+    <Navbar expand="lg" className="bg-body-tertiary ">
+      {/* <Container > */}
         <Navbar.Brand href="/">
 
         </Navbar.Brand>
@@ -99,7 +99,7 @@ const Navigationbar = () => {
 
 
         </Nav>
-      </Container>
+      {/* </Container> */}
     </Navbar>
   );
 };
