@@ -7,9 +7,9 @@
   align-items: center;
   background-color: #FAC16B;
   height: 60px;
-  width: 100%; /* Add this to span full width */
-  position: fixed; /* Add this to fix it at the bottom */
-  bottom: 0; /* Position it at the bottom */
+  width: 100%;
+  position: fixed;
+  bottom: 0; 
 }
 
 
