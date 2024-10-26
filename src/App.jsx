@@ -10,6 +10,7 @@ import './App.css';
 import Navigationbar from './components/Navigation';
 import CartPage from './Pages/cartPage';
 import ReceiptPage from './Pages/receiptPage';
+import GoShoppingPage from './Pages/GoShoppingPage';
 
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<CartPage />} />
                 <Route path="/receipts" element={<ReceiptPage />} />
+                <Route path="/go-shopping" element={<GoShoppingPage />}/>
                 {/* <Route path="/profile" element={<ProfilePage />} /> */}
 
               </Routes>
