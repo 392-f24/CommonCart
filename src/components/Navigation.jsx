@@ -96,6 +96,9 @@ const Navigationbar = () => {
             />
           </Nav.Link>
 
+          <Nav.Link as={NavLink} to="/go-shopping">
+            <p>Go Shopping</p>
+          </Nav.Link>
 
         </Nav>
       {/* </Container> */}
