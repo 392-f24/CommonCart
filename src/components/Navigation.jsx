@@ -7,20 +7,23 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faReceipt } from '@fortawesome/free-solid-svg-icons';
+
+
+
 
 const CartLink = ({ isSelected, onClick }) => {
     return (
       <NavLink to="/" className="nav-item" onClick={onClick}>
         <div className="navLinkContent">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill={isSelected ? 'white' : 'black'}
-            width="30px"
-            height="30px"
-          >
-            <path d="M7 18c-1.11 0-1.99.9-1.99 2S5.89 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.11 0-2 .9-2 2s.89 2 2 2 2-.9 2-2-.89-2-2-2zM7.81 16.22L6.25 5h14.65L21.71 13H8.22z" />
-          </svg>
+          <FontAwesomeIcon
+            icon={faShoppingCart}
+            color={isSelected ? 'white' : 'black'}
+            size='lg'
+          />
+          
           <p className={`navText ${isSelected ? 'selectedText' : ''}`}>Cart</p>
         </div>
       </NavLink>
@@ -31,15 +34,11 @@ const CartLink = ({ isSelected, onClick }) => {
     return (
       <NavLink to="/receipts" className="nav-item" onClick={onClick}>
         <div className="navLinkContent">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill={isSelected ? 'white' : 'black'}
-            width="30px"
-            height="30px"
-          >
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-3h-6v-2h6v2zm0-4h-6V9h6v2z" />
-          </svg>
+          <FontAwesomeIcon
+              icon={faReceipt}
+              color={isSelected ? 'white' : 'black'}
+              size='lg'
+            />
           <p className={`navText ${isSelected ? 'selectedText' : ''}`}>Receipt</p>
         </div>
       </NavLink>
