@@ -120,7 +120,7 @@ function CheckList() {
     const { destOnly, cartKeysOnly } = location.state || {};
     const [user] = useAuthState();
 
-    // Filter carts by `cartKeysOnly` and `destOnly` in `shoppingStores`
+    // Filter carts by `cartKeysOnly` and `destOnly` in `shoppingStores` 
     const filteredCarts = Object.entries(mockData)
         .filter(([cartId]) => cartKeysOnly.includes(cartId))
         .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]));
