@@ -1,17 +1,36 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import { OptionDropdown, OrangeButton } from "../Components/Buttons"
 import './GoShoppingPage.css'
-const destinationOptions = ["Jewel", "Whole Foods", "Trader Joe's"];
-const cartOptions = ["Roommates", "Spring Break Trip", "Club Meeting"];
+import { useDbData } from '../utilities/firebase';
+
+var destinationOptions = [];
+var cartOptions = [];
 const GoShoppingPage = () => {
-    const [destination, setDestination] = useState("Select Destination");
-    const [cart, setCart] = useState("Select Cart");
+    const [data, error] = useDbData('/Cart');
+    if (error) {
+       console.log("Error loading data!");
+    }
+
+    if (data && typeof data === 'object'){
+        const allCarts = Object.values(data);
+        allCarts.map((c)=>{
+            cartOptions.push(c.title);  
+            c.shoppingStores.map((store)=>destinationOptions.push(store));
+        });
+        destinationOptions = [...new Set(destinationOptions)];
+        cartOptions = [...new Set(cartOptions)];
+    }
+
+    const [destination, setDestination] = useState(["Select Destination"]);
+    const [cart, setCart] = useState(["Select Cart"]);
 
     const navigate = useNavigate();
     const DirectCheckList = () => {
-        navigate('/'); // TODO: navigate to the checklist page, pass data needed
+        navigate('/', { state: { destination, cart } } ); // TODO: navigate to the checklist page, pass data needed
+        setDestination(["Select Destination"]);
+        setCart(["Select Cart"])
       };
       return(
         <div className="center-container">
@@ -20,10 +39,23 @@ const GoShoppingPage = () => {
                 <Card.Body>
                     <div className="mb-3">
                         <strong>Destination:</strong>
-                        <OptionDropdown title={destination} onSelect={setDestination} options={destinationOptions} />
+                        <OptionDropdown 
+                            title={"Select Destination"}
+                            newTitle={destination} 
+                            onSelect={setDestination} 
+                            options={destinationOptions} 
+                            multiOption={false}
+                        />
                     </div>
                     <div className="mb-3">
                         <strong>Cart:</strong>
+                        <OptionDropdown 
+                            title={"Select Cart"} 
+                            newTitle={cart}
+                            onSelect={setCart} 
+                            options={cartOptions} 
+                            multiOption={true}
+                        />
                     </div>
                     <div className="d-flex justify-content-center">
                         <OrangeButton title={"Go shopping"} onClick={DirectCheckList}/>
