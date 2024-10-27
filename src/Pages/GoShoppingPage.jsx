@@ -50,8 +50,8 @@ const GoShoppingPage = () => {
         const cartsOnly = cart.slice(1);
         const destOnly = destination.slice(1);
         const cartKeysOnly = cartsOnly.map((c) => keyCart[c]);
-        console.log(cartKeysOnly);
-        navigate('/', { state: { destOnly, cartKeysOnly } } ); // TODO: navigate to the checklist page, pass data needed
+        // console.log(cartKeysOnly);
+        navigate('/go-shopping/checklist', { state: { destOnly, cartKeysOnly } } );
         setDestination(["Select Destination"]);
         setCart(["Select Cart"])
       };
