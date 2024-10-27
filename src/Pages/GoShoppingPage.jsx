@@ -5,30 +5,53 @@ import { OptionDropdown, OrangeButton } from "../Components/Buttons"
 import './GoShoppingPage.css'
 import { useDbData } from '../utilities/firebase';
 
-var destinationOptions = [];
-var cartOptions = [];
 const GoShoppingPage = () => {
-    const [data, error] = useDbData('/Cart');
+    const [keyCart, setKeyCart] = useState({});
+  const [data, error] = useDbData('/Cart');
+  const [cartOptions, setCartOptions] = useState([]);
+  const [destinationOptions, setDestinationOptions] = useState([]);
+
+  useEffect(() => {
     if (error) {
-       console.log("Error loading data!");
+      console.log("Error loading data!");
+      return;
     }
 
-    if (data && typeof data === 'object'){
-        const allCarts = Object.values(data);
-        allCarts.map((c)=>{
-            cartOptions.push(c.title);  
-            c.shoppingStores.map((store)=>destinationOptions.push(store));
-        });
-        destinationOptions = [...new Set(destinationOptions)];
-        cartOptions = [...new Set(cartOptions)];
-    }
+        if (data && typeof data === 'object') {
+            const allCarts = Object.values(data);
+            const allKeys = Object.keys(data);
+
+            // Create new objects for `keyCart`, `cartOptions`, and `destinationOptions`
+            const newKeyCart = {};
+            const newCartOptions = [];
+            const newDestinationOptions = [];
+
+            allCarts.forEach((c, index) => {
+                newKeyCart[c.title] = allKeys[index];
+                newCartOptions.push(c.title);
+
+                c.shoppingStores.forEach((store) => {
+                newDestinationOptions.push(store);
+                });
+            });
+
+            // Remove duplicates using Set
+            setKeyCart(newKeyCart);
+            setCartOptions([...new Set(newCartOptions)]);
+            setDestinationOptions([...new Set(newDestinationOptions)]);
+        }
+    }, [data, error]); // Only re-run effect if `data` or `error` changes
 
     const [destination, setDestination] = useState(["Select Destination"]);
     const [cart, setCart] = useState(["Select Cart"]);
 
     const navigate = useNavigate();
     const DirectCheckList = () => {
-        navigate('/', { state: { destination, cart } } ); // TODO: navigate to the checklist page, pass data needed
+        const cartsOnly = cart.slice(1);
+        const destOnly = destination.slice(1);
+        const cartKeysOnly = cartsOnly.map((c) => keyCart[c]);
+        console.log(cartKeysOnly);
+        navigate('/', { state: { destOnly, cartKeysOnly } } ); // TODO: navigate to the checklist page, pass data needed
         setDestination(["Select Destination"]);
         setCart(["Select Cart"])
       };
