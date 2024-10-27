@@ -9,7 +9,7 @@ const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   // Example cart data
-  const carts = [
+  const [carts, setCarts] = useState([
     {
       title: '2024 Roommates',
       paymentType: 'Weekly Payment',
@@ -20,8 +20,10 @@ const CartPage = () => {
       paymentType: 'One time Payment',
       paymentDue: 'No payment due',
     },
-  ];
-
+  ]);
+  const handleAddCart = (newCart) => {
+    setCarts([...carts, newCart]);
+  };
   return (
     <div className="cart-page">
       <h1>My Carts</h1>
@@ -47,7 +49,7 @@ const CartPage = () => {
           </button>
         </div>
       </div>
-      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} />
+      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} onAddCart={handleAddCart} />
     </div>
   );
 };
