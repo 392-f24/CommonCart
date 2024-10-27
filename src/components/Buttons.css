@@ -16,3 +16,10 @@
     background-color: #e4a74b; 
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   }
+
+  .fixed-width-dropdown {
+    width: 10rem;             /* Set a fixed width for the button */
+    white-space: nowrap;      /* Prevent text from wrapping */
+    overflow: visible;        /* Allow overflow to show the dropdown */
+    text-overflow: ellipsis;  /* Adds ellipsis for overflowing text if necessary */
+}
