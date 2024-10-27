@@ -1,3 +1,57 @@
-.white{
-    color: white;
+.shoppinglist-card {
+    background-color: #F5EDE0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 20px;
+} 
+
+.shoppinglist-card h1 {
+    font-size: 28px; /* Adjust title size */
+    color: #334256;
+    margin-bottom: 15px; /* Space below the title */
 }
+
+.shoppinglist-item {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Vertically center items */
+    background-color: #EAE2D6; /* Background color for items */
+    padding: 15px; /* Adjust padding as needed */
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: 10px; /* Space between items */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+  }
+  
+
+.shoppinglist-item h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #334256;
+}
+
+.shoppinglist-item p {
+    margin: 5px 0;
+    font-size: 14px; 
+    color: #000000; 
+}
+
+.user-initial {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%; /* Makes the circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white; /* Text color */
+    font-weight: bold;
+    font-size: 16px; /* Adjust font size */
+    margin-right: 10px; /* Space between circle and text */
+  }
+  
