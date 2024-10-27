@@ -22,6 +22,11 @@ const CartPage = () => {
     },
   ];
 
+  // const handleCartClick = (cartTitle) => {
+  //   // Navigate to the ShoppingListPage with the cart title as a parameter (if needed)
+  //   navigate(`/shopping-list/${cartTitle}`); // Adjust the route based on your setup
+  // }
+
   return (
     <div className="cart-page">
       <h1>My Carts</h1>
@@ -35,6 +40,7 @@ const CartPage = () => {
               title={cart.title}
               paymentType={cart.paymentType}
               paymentDue={cart.paymentDue}
+              // onClick={() => handleCartClick(cart.title)}
             />
           ))}
         </div>
