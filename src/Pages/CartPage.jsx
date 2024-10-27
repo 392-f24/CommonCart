@@ -1,9 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
 import { SignOut } from './SignIn';
-import CartItem from '../Components/CartItem';
+import CartItem from '../components/CartItem';
+import React, { useState } from 'react';
+import CreateCartModal from '../components/CreateCartModal';
 
 const CartPage = () => {
+  const [showModal, setShowModal] = useState(false);
+
   // Example cart data
   const carts = [
     {
@@ -35,9 +39,15 @@ const CartPage = () => {
           ))}
         </div>
         <div className="create-cart-container">
-          <button className="create-cart-button">+ Create Cart</button>
+        <button 
+            className="create-cart-button" 
+            onClick={() => setShowModal(true)}
+          >
+            + Create Cart
+          </button>
         </div>
       </div>
+      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };
