@@ -9,7 +9,7 @@ const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   // Example cart data
-  const carts = [
+  const [carts, setCarts] = useState([
     {
       title: '2024 Roommates',
       paymentType: 'Weekly Payment',
@@ -20,7 +20,21 @@ const CartPage = () => {
       paymentType: 'One time Payment',
       paymentDue: 'No payment due',
     },
-  ];
+  ]);
+    const handleAddCart = (newCart) => {
+      setCarts([...carts, newCart]);
+    };
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    //TODO: remove this is just to show the data getting sent from Go Shopping
+    useEffect(() => {
+      const { destOnly, cartKeysOnly } = location.state || {};
+      if(destOnly && cartKeysOnly){
+        console.log(destOnly);
+        console.log(cartKeysOnly);
+      }
+    }, [location.state]);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -59,7 +73,7 @@ const CartPage = () => {
           </button>
         </div>
       </div>
-      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} />
+      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} onAddCart={handleAddCart} />
     </div>
   );
 };

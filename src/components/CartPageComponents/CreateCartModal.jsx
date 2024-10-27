@@ -14,7 +14,7 @@ const mockUserDatabase = [
 const mockStoreDatabase = [
   'Walmart', 'Wholefood' ,'Sams', 'Trader Joes','Jewel Osco','Target' 
 ];
-const CreateCartModal = ({ show, onClose }) => {
+const CreateCartModal = ({ show, onClose , onAddCart }) => {
   
   // State for the cart name and user search inputs
   const [cartName, setCartName] = useState('');
@@ -28,13 +28,26 @@ const CreateCartModal = ({ show, onClose }) => {
 
   // Click handler for the "Create" button
   const handleCreateClick = () => {
-    onClose();
-    console.log('Cart Name:', cartName);
-    console.log('User Search:', userSearch);
-    setCartName('');
-    setUserSearch('');
-  };
+    if (cartName) {
+      const newCart = {
+        title: cartName,
+        paymentType: 'One time Payment',
+        paymentDue: 'Next payment due',
+      };
 
+      // Use the callback to add the new cart
+      onAddCart(newCart);
+      onClose();
+      
+      // Reset states
+      setCartName('');
+      setUserSearch('');
+      setAddedUsers([]);
+      setStoreSearch('');
+      setAddedStores([]);
+    }
+  };
+  
   // Only render the modal if 'show' is true
   if (!show) return null;
 
