@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import './CartPage.css'
 import { SignOut } from './SignIn';
 import CartItem from '../components/CartPageComponents/CartItem';
-import React, { useState } from 'react';
 import CreateCartModal from '../components/CartPageComponents/CreateCartModal';
 
 const CartPage = () => {
@@ -22,22 +21,16 @@ const CartPage = () => {
       paymentDue: 'No payment due',
     },
   ];
-// =======
-//     const navigate = useNavigate();
-//     const location = useLocation();
+
+    const navigate = useNavigate();
+    const location = useLocation();
     
-//     //TODO: remove this is just to show the data getting sent from Go Shopping
-//     useEffect(() => {
-//       const { destination, cart } = location.state || {};
-//       console.log(destination.shift());
-//       console.log(cart.shift());
-//     }, [location.state]);
-  
-//     return (
-//       <div className="cart-page">
-//         <p> Cart Page</p>   
-//         <SignOut/>
-// >>>>>>> 24aac74 (go shopping page)
+    //TODO: remove this is just to show the data getting sent from Go Shopping
+    useEffect(() => {
+      const { destination, cart } = location.state || {};
+      console.log(destination.shift());
+      console.log(cart.shift());
+    }, [location.state]);
 
   return (
     <div className="cart-page">
