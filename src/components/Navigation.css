@@ -1,32 +1,47 @@
+/* Navigation.css */
+
 .bottom-nav {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr 1fr;
   justify-content: space-between;
   align-items: center;
   background-color: #FAC16B;
   height: 60px;
+  width: 100%;
+  position: fixed;
+  bottom: 0; 
 }
 
-.cartNav, .receiptNav {
+
+.cartNav, .receiptNav .shoppingNav {
   display: flex;
   justify-content: center; 
   align-items: center;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .cartNav {
   grid-column: 1; 
 }
 
-.receiptNav {
+.shoppingNav {
   grid-column: 2;
 }
+
+.receiptNav {
+  grid-column: 3;
+}
+
+
 
 .navLinkContent {
   display: flex;
   flex-direction: column; 
   align-items: center; 
   justify-content: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
 }
 .nav-item {
   text-decoration: none;
