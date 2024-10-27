@@ -1,0 +1,39 @@
+.cart-item {
+    background-color: #F5EDE0;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  
+  .cart-item:hover {
+    background-color: #EAE2D6; /* Slightly darker on hover */
+    transform: scale(1.02); /* Small scale effect on hover */
+  }
+  
+  .cart-item h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #334256;
+    font-weight: bold;
+  }
+  
+  .payment-type {
+    font-size: 14px;
+    color: #000000;
+    margin: 5px 0;
+    font-weight: bold;
+  }
+  
+  .payment-due {
+    font-size: 12px;
+    color: #7D7D7D;
+  }
+  
+  .clock-icon {
+    margin-right: 5px;
+  }
+  

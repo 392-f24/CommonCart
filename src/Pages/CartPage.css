@@ -1,4 +1,55 @@
 .cart-page {
-    background-color: #374863;
-    min-height: 100%;
-}
+    background-color: #334256; /* Deep blue background */
+    color: #F5EDE0;
+    padding: 20px; /* Uniform padding for all sides */
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Space between header/cart and button */
+  }
+  
+  .cart-page h1 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    color: #FAC16B; /* Bright yellow color for the title */
+    font-size: 40px;
+    font-family: 'Josefin Sans';
+    text-align: center;
+  }
+  
+  /* Wrapper for cart list and button */
+  .cart-content-wrapper {
+    padding: 0 50px; /* Control padding for both cart-list and button */
+    flex-grow: 1; /* Allow cart list to grow and fill space */
+  }
+  
+  .cart-list {
+    margin-bottom: 20px;
+  }
+  
+  .create-cart-container {
+    
+    display: flex;
+    justify-content: flex-end; /* Aligns the button to the right */
+  }
+  
+  .create-cart-button {
+    background-color: #FAC16B;
+    color: #000000;
+    padding: 10px 15px;
+    border: 3px solid #000000;
+    border-radius: 16px;
+    font-size: 22px;
+    font-family: 'Josefin Sans';
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s;
+    margin-right: 0;
+  }
+  
+  .create-cart-button:hover {
+    background-color: #d28c4c;
+  }
+  

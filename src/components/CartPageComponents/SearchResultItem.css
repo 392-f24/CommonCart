@@ -1,0 +1,38 @@
+.search-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: 'Josefin Sans';
+    color: #334256;
+  }
+  
+  .search-result-item:hover {
+    background-color: #EAE2D6; /* Slight hover effect */
+  }
+  
+  /* Label style */
+  .result-label {
+    flex-grow: 1;
+    font-size: 16px;
+  }
+  
+  /* Add button style */
+  .add-button {
+    background-color: #FAC16B;
+    border: none;
+    color: #334256;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Josefin Sans';
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .add-button:hover {
+    background-color: #d28c4c;
+  }
+  
