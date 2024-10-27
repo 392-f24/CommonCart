@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
 import { SignOut } from './SignIn';
-import CartItem from '../components/CartItem';
+import CartItem from '../components/CartPageComponents/CartItem';
 import React, { useState } from 'react';
-import CreateCartModal from '../components/CreateCartModal';
+import CreateCartModal from '../components/CartPageComponents/CreateCartModal';
 
 const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
