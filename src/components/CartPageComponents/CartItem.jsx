@@ -7,8 +7,8 @@ const CartItem = ({ title, paymentType, paymentDue }) => {
 
   const handleClick = () => {
     console.log("not_implemented");
-    // Navigate to a new page (this will be updated in the future)
-    // Example: navigate(`/cart/${title}`); // Uncomment and adjust when ready
+    
+    navigate(`/cart/${encodeURIComponent(title)}`);
   };
 
   return (
