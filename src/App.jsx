@@ -11,7 +11,11 @@ import Navigationbar from './components/Navigation';
 import CartPage from './Pages/cartPage';
 import ReceiptPage from './Pages/receiptPage';
 import GoShoppingPage from './Pages/GoShoppingPage';
+<<<<<<< HEAD
 import ShoppingListPage from './Pages/ShoppingListPage';
+=======
+import CheckList from './components/CheckList';
+>>>>>>> cfe65737361529bc4de0eb19d4a16139ed941a3d
 
 
 const App = () => {
@@ -38,7 +42,11 @@ const App = () => {
                 <Route path="/" element={<CartPage />} />
                 <Route path="/receipts" element={<ReceiptPage />} />
                 <Route path="/go-shopping" element={<GoShoppingPage />}/>
+<<<<<<< HEAD
                 <Route path="/cart/:title" element={<ShoppingListPage />} />
+=======
+                <Route path="/go-shopping/checklist" element={<CheckList />} />
+>>>>>>> cfe65737361529bc4de0eb19d4a16139ed941a3d
                 {/* <Route path="/profile" element={<ProfilePage />} /> */}
 
               </Routes>
