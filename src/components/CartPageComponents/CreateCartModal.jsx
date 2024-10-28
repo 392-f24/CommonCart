@@ -27,7 +27,7 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
       const newCart = {
         title: cartName,
         paymentType: 'One-time Payment',
-        paymentDue: 'Next payment due',
+        paymentDue: '',
         shoppingStores: addedStores,
         users: addedUsers,
         items: {},
