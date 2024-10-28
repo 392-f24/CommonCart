@@ -1,12 +1,18 @@
+//CartPage.jsx
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
+// import SignIn from './Pages/SignIn';
 import { SignOut } from './SignIn';
 import CartItem from '../components/CartPageComponents/CartItem';
 import React, { useState } from 'react';
 import CreateCartModal from '../components/CartPageComponents/CreateCartModal';
+import AddToCartModal from '../components/AddToCart';
 
 const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
+
+  //To Be moved
+  const [showAddCartModal, setAddCartModal] = useState(false);
 
   // Example cart data
   const carts = [
@@ -39,15 +45,39 @@ const CartPage = () => {
           ))}
         </div>
         <div className="create-cart-container">
-        <button 
-            className="create-cart-button" 
-            onClick={() => setShowModal(true)}
-          >
-            + Create Cart
-          </button>
+          <button 
+              className="create-cart-button" 
+              onClick={() => setShowModal(true)}
+            >
+              + Create Cart
+            </button>
         </div>
       </div>
       <CreateCartModal show={showModal} onClose={() => setShowModal(false)} />
+
+      {/* <div className="create-cart-container">
+          <button 
+              className="create-cart-button" 
+              onClick={() => setAddCartModal(true)}
+            >
+              Add to Cart
+            </button>
+        </div>
+      {showAddCartModal &&
+        (<AddToCartModal closeModal={showAddCartModal} />
+      )} */}
+        <button className="create-cart-button" onClick={() => {
+            setAddCartModal(true);
+          }}> Add Item to Cart </button>
+
+          {showAddCartModal && (
+            <AddToCartModal
+              closeModal={() => setAddCartModal(false)}
+            />
+          )}
+
+
+
     </div>
   );
 };

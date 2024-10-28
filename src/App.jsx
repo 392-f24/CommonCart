@@ -8,9 +8,9 @@ import { useAuthState } from './utilities/firebase';
 import './App.css';
 
 import Navigationbar from './components/Navigation';
-import CartPage from './Pages/cartPage';
-import ReceiptPage from './Pages/receiptPage';
-import GoShoppingPage from './Pages/GoShoppingPage';
+import CartPage from './pages/cartPage';
+import ReceiptPage from './pages/receiptPage';
+import GoShoppingPage from './pages/GoShoppingPage';
 
 
 const App = () => {
