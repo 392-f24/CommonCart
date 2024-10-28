@@ -1,46 +1,44 @@
-import { useNavigate, useLocation} from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import './CartPage.css'
-import { SignOut } from './SignIn';
+import './CartPage.css';
+import { signOut, useDbData } from '../utilities/firebase';
 import CartItem from '../components/CartPageComponents/CartItem';
 import CreateCartModal from '../components/CartPageComponents/CreateCartModal';
 
 const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
 
+  // Fetch carts data
+  const [cartData, cartDataError] = useDbData('/Cart');
+  const [carts, setCarts] = useState([]);
 
+  useEffect(() => {
+    if (cartData) {
+      const transformedCarts = Object.entries(cartData).map(([cartId, cart]) => ({
+        id: cartId,
+        title: cart.title,
+        paymentType: cart.paymentType === "Weekly" ? "Weekly Payment" : "One-time Payment",
+        paymentDue: cart.paymentDue ? `Next payment due: ${cart.paymentDue}` : "No payment due",
+      }));
+      setCarts(transformedCarts);
+    }
+  }, [cartData]);
 
-  // Example cart data
-  const [carts, setCarts] = useState([
-    {
-      title: '2024 Roommates',
-      paymentType: 'Weekly Payment',
-      paymentDue: 'Next payment due: Monday, October 21',
-    },
-    {
-      title: 'Japan Summer Trip',
-      paymentType: 'One time Payment',
-      paymentDue: 'No payment due',
-    },
-  ]);
-    const handleAddCart = (newCart) => {
-      setCarts([...carts, newCart]);
-    };
+  const handleAddCart = (newCart) => {
+    setCarts([...carts, newCart]);
+  };
 
   return (
     <div className="cart-page">
       <h1>My Carts</h1>
-      
-      {/* Wrapper for controlling padding of cart-list and button */}
+
       <div className="cart-content-wrapper">
         <div className="cart-list">
-          {carts.map((cart, index) => (
+          {carts.map((cart) => (
             <CartItem
-              key={index}
+              key={cart.id}
               title={cart.title}
               paymentType={cart.paymentType}
               paymentDue={cart.paymentDue}
-              // onClick={() => handleCartClick(cart.title)}
             />
           ))}
         </div>
@@ -51,19 +49,13 @@ const CartPage = () => {
             >
               + Create Cart
             </button>
-            
         </div>
         <div className="signoutContainer">
-          <button className="create-cart-button" onClick={SignOut}>
+          <button className="create-cart-button" onClick={signOut}>
             Sign Out
           </button>
         </div>
-        
       </div>
-
-
-
-
 
       <CreateCartModal show={showModal} onClose={() => setShowModal(false)} onAddCart={handleAddCart} />
     </div>
