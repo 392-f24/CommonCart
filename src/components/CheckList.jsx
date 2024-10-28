@@ -94,7 +94,7 @@ function CheckList() {
         className="text-center"
       >
         <Card.Body style={{ overflowY: 'auto', padding: '0', display: 'flex', flexDirection: 'column' }}>
-          <Card.Title style={{ fontFamily: "Josefin Sans", fontSize: '1.5rem', fontWeight: 'bold' }}>{new Date().toLocaleDateString()} Shopping Trip</Card.Title>
+          <Card.Title style={{ fontFamily: "Josefin Sans", fontSize: '1.5rem', fontWeight: 'bold' }}>{new Date().toLocaleDateString()} Shopping Trip {destOnly}</Card.Title>
 
           <ListGroup variant="flush" className="mb-3" style={{ backgroundColor: 'transparent' }}>
             {items.map((item) => (
