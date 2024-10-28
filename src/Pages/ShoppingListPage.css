@@ -98,6 +98,7 @@ ul {
     transition: background-color 0.3s;
     margin-right: 0;
     margin-top:20px;
+    margin-bottom: 20px;
   }
   
   .create-cart-button:hover {

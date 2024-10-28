@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, ListGroup, Form, Modal } from 'react-bootstrap';
 import { BackButton, OrangeButton } from "../Components/Buttons";
-import { useAuthState, useDbData, useDbUpdate } from "../utilities/firebase"; // Import Firebase hooks
+import { useAuthState, useDbData, useDbUpdate } from "../utilities/firebase";
+import './CheckList.css';
 
 function CheckList() {
   const location = useLocation();
@@ -83,6 +84,8 @@ function CheckList() {
     <div className="d-flex flex-column align-items-center justify-content-center min-vh-100" style={{ padding: '2.0rem' }}>
       <BackButton />
 
+      <h1> {destOnly} </h1>
+
       <Card
         style={{
           width: '100%',
@@ -94,7 +97,7 @@ function CheckList() {
         className="text-center"
       >
         <Card.Body style={{ overflowY: 'auto', padding: '0', display: 'flex', flexDirection: 'column' }}>
-          <Card.Title style={{ fontFamily: "Josefin Sans", fontSize: '1.5rem', fontWeight: 'bold' }}>{new Date().toLocaleDateString()} Shopping Trip {destOnly}</Card.Title>
+          <Card.Title style={{ fontFamily: "Josefin Sans", fontSize: '1.5rem', fontWeight: 'bold' }}>{new Date().toLocaleDateString()} Shopping Trip</Card.Title>
 
           <ListGroup variant="flush" className="mb-3" style={{ backgroundColor: 'transparent' }}>
             {items.map((item) => (
