@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDbData } from '../utilities/firebase.js'; // Import your custom hook for fetching data
-import { OrangeButton } from '../Components/Buttons.jsx';
+import { BackButtonMyCart } from '../Components/Buttons.jsx';
 import './ShoppingListPage.css'; // Adjust the path as necessary
 import { useParams } from 'react-router-dom';
+import { useAuthState } from '../utilities/firebase.js'; // Import your custom useAuthState hook
 
-const ShoppingListPage = ({ currentUserId }) => {
+const ShoppingListPage = () => {
   const [carts, cartsError] = useDbData('Cart'); // Fetch cart data
   const [users, usersError] = useDbData('users'); // Fetch users data
   const [items, setItems] = useState([]);
   const [userMap, setUserMap] = useState({});
+  const [user] = useAuthState(); // Use the custom hook to get the current user
 
   const { title } = useParams(); // Get the title from the URL
 
@@ -33,11 +35,11 @@ const ShoppingListPage = ({ currentUserId }) => {
 
   useEffect(() => {
     if (carts) {
-      const matchingCart = Object.values(carts).find(cart => cart.title === title);
+      const matchingCart = Object.values(carts).find(cart => cart.title === title); // Match based on title
       if (matchingCart && matchingCart.items) {
         setItems(Object.values(matchingCart.items)); // Collect items from the matching cart
       } else {
-        setItems([]); // No items if cart is not found
+        setItems([]); // No items if cart not found
       }
     }
   }, [carts, title]);
@@ -50,40 +52,44 @@ const ShoppingListPage = ({ currentUserId }) => {
     return <div>Error fetching users: {usersError.message}</div>;
   }
 
+  const currentUserId = user ? user.uid : null; // Get the current user's ID
+
   return (
-    <div className='white'>
-      <OrangeButton />
-      <div className="shoppinglist-card">
-        <h1>Shopping List for: {title}</h1>
-        {items.length === 0 ? (
-          <p>No items found in this cart.</p>
-        ) : (
-          <ul>
-            {items.map((item) => {
-              const addedById = item.userAdded;
-              const addedByName = userMap[addedById] || 'Unknown User';
-              const initials = getInitials(addedByName);
+    <div className='shoppinglist-page'>
+      <BackButtonMyCart />
+      <h1>Shopping List: {title}</h1>
+      <div className="shoppinglist-content-wrapper">
+        <div className="shoppinglist-card">
+          {items.length === 0 ? (
+            <p>No items found in this cart.</p>
+          ) : (
+            <ul>
+              {items.map((item) => {
+                const addedById = item.userAdded;
+                const addedByName = userMap[addedById] || 'Unknown User';
+                const initials = getInitials(addedByName);
 
-              // Assign color if not already assigned
-              if (!colorMap[addedById]) {
-                colorMap[addedById] = addedById === currentUserId ? pastelGreen : randomPastelColor();
-              }
+                // Assign color if not already assigned
+                if (!colorMap[addedById]) {
+                  colorMap[addedById] = addedById === currentUserId ? pastelGreen : randomPastelColor();
+                }
 
-              return (
-                <li key={item.Item_id} className="shoppinglist-item">
+                return (
+                  <li key={item.Item_id} className="shoppinglist-item">
                     <div className="user-initial" style={{ backgroundColor: colorMap[addedById] }}>
-                    {initials}
+                      {initials}
                     </div>
-                    <div className="shoppinglist-details"> {/* Add a class for item details */}
-                    <h2>{item.itemName}</h2>
-                    <p>Store: {item.store}</p>
-                    {/* <p>Added by: {addedByName}</p> */}
+                    <div className="shoppinglist-details">
+                      <h2>{item.itemName}</h2>
+                      {/* <p>Store: {item.store}</p> */}
+                      {/* <p>Added by: {addedByName}</p> */}
                     </div>
-              </li>              
-              );
-0            })}
-          </ul>
-        )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );

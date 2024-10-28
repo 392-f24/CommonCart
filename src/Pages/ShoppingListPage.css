@@ -1,3 +1,30 @@
+.shoppinglist-page {
+    background-color: #334256; 
+    color: #F5EDE0;
+    padding: 20px;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    padding-top: 40px;
+  }
+
+/* Wrapper for cart list and button */
+.shoppinglist-content-wrapper {
+    padding: 0 50px; 
+    flex-grow: 1; 
+    }
+      
+  
+  .shoppinglist-page h1 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    color: #FAC16B; /* bright yellow color for the title */
+    font-size: 40px;
+    font-family: 'Josefin Sans';
+    text-align: center;
+  }
 .shoppinglist-card {
     background-color: #F5EDE0;
     padding: 20px;
@@ -8,25 +35,25 @@
 } 
 
 .shoppinglist-card h1 {
-    font-size: 28px; /* Adjust title size */
+    font-size: 28px;
     color: #334256;
-    margin-bottom: 15px; /* Space below the title */
+    margin-bottom: 15px; 
 }
 
 .shoppinglist-item {
-    display: flex; /* Use flexbox for layout */
-    align-items: center; /* Vertically center items */
-    background-color: #EAE2D6; /* Background color for items */
-    padding: 15px; /* Adjust padding as needed */
-    border-radius: 8px; /* Rounded corners */
-    margin-bottom: 10px; /* Space between items */
+    display: flex;
+    align-items: center; 
+    background-color: #EAE2D6;
+    padding: 15px; 
+    border-radius: 8px;
+    margin-bottom: 10px; 
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 ul {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
+    list-style-type: none; /* remove bullet points */
+    padding: 0;
+    margin: 0; 
   }
   
 
@@ -43,15 +70,15 @@ ul {
 }
 
 .user-initial {
-    width: 40px; /* Adjust size as needed */
-    height: 40px; /* Adjust size as needed */
-    border-radius: 50%; /* Makes the circle */
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white; /* Text color */
+    color: white;
     font-weight: bold;
-    font-size: 16px; /* Adjust font size */
-    margin-right: 10px; /* Space between circle and text */
+    font-size: 16px;
+    margin-right: 10px; 
   }
   
