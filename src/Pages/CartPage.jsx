@@ -1,10 +1,8 @@
-//CartPage.jsx
-import { useNavigate } from 'react-router-dom';
-import './CartPage.css';
-// import SignIn from './Pages/SignIn';
+import { useNavigate, useLocation} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import './CartPage.css'
 import { SignOut } from './SignIn';
 import CartItem from '../components/CartPageComponents/CartItem';
-import React, { useState } from 'react';
 import CreateCartModal from '../components/CartPageComponents/CreateCartModal';
 import AddToCartModal from '../components/AddToCart';
 
@@ -15,7 +13,7 @@ const CartPage = () => {
   const [showAddCartModal, setAddCartModal] = useState(false);
 
   // Example cart data
-  const carts = [
+  const [carts, setCarts] = useState([
     {
       title: '2024 Roommates',
       paymentType: 'Weekly Payment',
@@ -26,7 +24,33 @@ const CartPage = () => {
       paymentType: 'One time Payment',
       paymentDue: 'No payment due',
     },
-  ];
+  ]);
+    const handleAddCart = (newCart) => {
+      setCarts([...carts, newCart]);
+    };
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    //TODO: remove this is just to show the data getting sent from Go Shopping
+    useEffect(() => {
+      const { destOnly, cartKeysOnly } = location.state || {};
+      if(destOnly && cartKeysOnly){
+        console.log(destOnly);
+        console.log(cartKeysOnly);
+      }
+    }, [location.state]);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    //TODO: remove this is just to show the data getting sent from Go Shopping
+    useEffect(() => {
+      const { destOnly, cartKeysOnly } = location.state || {};
+      if(destOnly && cartKeysOnly){
+        console.log(destOnly);
+        console.log(cartKeysOnly);
+      }
+    }, [location.state]);
 
   return (
     <div className="cart-page">
@@ -41,6 +65,7 @@ const CartPage = () => {
               title={cart.title}
               paymentType={cart.paymentType}
               paymentDue={cart.paymentDue}
+              // onClick={() => handleCartClick(cart.title)}
             />
           ))}
         </div>
@@ -53,19 +78,9 @@ const CartPage = () => {
             </button>
         </div>
       </div>
+{/* <<<<<<< HEAD
       <CreateCartModal show={showModal} onClose={() => setShowModal(false)} />
 
-      {/* <div className="create-cart-container">
-          <button 
-              className="create-cart-button" 
-              onClick={() => setAddCartModal(true)}
-            >
-              Add to Cart
-            </button>
-        </div>
-      {showAddCartModal &&
-        (<AddToCartModal closeModal={showAddCartModal} />
-      )} */}
         <button className="create-cart-button" onClick={() => {
             setAddCartModal(true);
           }}> Add Item to Cart </button>
@@ -78,6 +93,8 @@ const CartPage = () => {
 
 
 
+======= */}
+      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} onAddCart={handleAddCart} />
     </div>
   );
 };
