@@ -5,11 +5,13 @@ import { OptionDropdown, OrangeButton } from "../Components/Buttons"
 import './GoShoppingPage.css'
 import { useDbData } from '../utilities/firebase';
 
+
 const GoShoppingPage = () => {
     const [keyCart, setKeyCart] = useState({});
   const [data, error] = useDbData('/Cart');
   const [cartOptions, setCartOptions] = useState([]);
   const [destinationOptions, setDestinationOptions] = useState([]);
+
 
   useEffect(() => {
     if (error) {
@@ -85,7 +87,10 @@ const GoShoppingPage = () => {
                     </div>
                 </Card.Body>
             </Card>
-        </div>
+
+
+
+    </div>
       );
     
 }

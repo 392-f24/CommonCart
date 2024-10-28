@@ -3,6 +3,7 @@
     color: #F5EDE0;
     padding: 20px;
     min-height: 100vh;
+    min-width: 100vw;
     font-family: 'Arial', sans-serif;
     display: flex;
     flex-direction: column;
@@ -82,3 +83,23 @@ ul {
     margin-right: 10px; 
   }
   
+
+  .create-cart-button {
+    background-color: #FAC16B;
+    color: #000000;
+    padding: 10px 15px;
+    border: 3px solid #000000;
+    border-radius: 16px;
+    font-size: 22px;
+    font-family: 'Josefin Sans';
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s;
+    margin-right: 0;
+    margin-top:20px;
+  }
+  
+  .create-cart-button:hover {
+    background-color: #d28c4c;
+  }

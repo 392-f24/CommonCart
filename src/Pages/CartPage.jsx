@@ -8,6 +8,8 @@ import CreateCartModal from '../components/CartPageComponents/CreateCartModal';
 const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
 
+
+
   // Example cart data
   const [carts, setCarts] = useState([
     {
@@ -43,14 +45,26 @@ const CartPage = () => {
           ))}
         </div>
         <div className="create-cart-container">
-        <button 
-            className="create-cart-button" 
-            onClick={() => setShowModal(true)}
-          >
-            + Create Cart
+          <button 
+              className="create-cart-button" 
+              onClick={() => setShowModal(true)}
+            >
+              + Create Cart
+            </button>
+            
+        </div>
+        <div className="signoutContainer">
+          <button className="create-cart-button" onClick={SignOut}>
+            Sign Out
           </button>
         </div>
+        
       </div>
+
+
+
+
+
       <CreateCartModal show={showModal} onClose={() => setShowModal(false)} onAddCart={handleAddCart} />
     </div>
   );

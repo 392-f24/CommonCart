@@ -4,6 +4,8 @@ import { BackButtonMyCart } from '../Components/Buttons.jsx';
 import './ShoppingListPage.css'; // Adjust the path as necessary
 import { useParams } from 'react-router-dom';
 import { useAuthState } from '../utilities/firebase.js'; // Import your custom useAuthState hook
+import AddToCartModal from '../components/AddToCart';
+
 
 const ShoppingListPage = () => {
   const [carts, cartsError] = useDbData('Cart'); // Fetch cart data
@@ -13,6 +15,11 @@ const ShoppingListPage = () => {
   const [user] = useAuthState(); // Use the custom hook to get the current user
 
   const { title } = useParams(); // Get the title from the URL
+  const [showAddCartModal, setAddCartModal] = useState(false);
+  const [cartId, setCartId] = useState(null); // State to hold cartId
+
+
+
 
   // Function to get initials from a name
   const getInitials = (name) => {
@@ -33,16 +40,21 @@ const ShoppingListPage = () => {
     }
   }, [users]);
 
+    // Set cartId based on title from URL
   useEffect(() => {
-    if (carts) {
-      const matchingCart = Object.values(carts).find(cart => cart.title === title); // Match based on title
-      if (matchingCart && matchingCart.items) {
-        setItems(Object.values(matchingCart.items)); // Collect items from the matching cart
-      } else {
-        setItems([]); // No items if cart not found
+      if (carts) {
+        const matchingCart = Object.entries(carts).find(
+          ([, cart]) => cart.title === title
+        );
+        if (matchingCart) {
+          const [id, cartData] = matchingCart;
+          setCartId(id); // Set cartId based on the matching cart
+          setItems(cartData.items ? Object.values(cartData.items) : []);
+        } else {
+          setItems([]); // No items if cart not found
+        }
       }
-    }
-  }, [carts, title]);
+    }, [carts, title]);
 
   if (cartsError) {
     return <div>Error fetching carts: {cartsError.message}</div>;
@@ -90,7 +102,19 @@ const ShoppingListPage = () => {
             </ul>
           )}
         </div>
+        <button className="create-cart-button" onClick={() => setAddCartModal(true)}>
+            Add Item to Cart
+        </button>
       </div>
+
+      {showAddCartModal && (
+            <AddToCartModal
+                closeModal={() => setAddCartModal(false)}
+                cartId={cartId} // Pass cartId to AddToCartModal
+                cartTitle={title} // Pass cart title to AddToCartModal
+
+            />
+        )}
     </div>
   );
 };
