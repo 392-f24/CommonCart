@@ -24,29 +24,6 @@ const CartPage = () => {
     const handleAddCart = (newCart) => {
       setCarts([...carts, newCart]);
     };
-    const navigate = useNavigate();
-    const location = useLocation();
-    
-    //TODO: remove this is just to show the data getting sent from Go Shopping
-    useEffect(() => {
-      const { destOnly, cartKeysOnly } = location.state || {};
-      if(destOnly && cartKeysOnly){
-        console.log(destOnly);
-        console.log(cartKeysOnly);
-      }
-    }, [location.state]);
-
-    const navigate = useNavigate();
-    const location = useLocation();
-    
-    //TODO: remove this is just to show the data getting sent from Go Shopping
-    useEffect(() => {
-      const { destOnly, cartKeysOnly } = location.state || {};
-      if(destOnly && cartKeysOnly){
-        console.log(destOnly);
-        console.log(cartKeysOnly);
-      }
-    }, [location.state]);
 
   return (
     <div className="cart-page">
