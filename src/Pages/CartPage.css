@@ -52,4 +52,10 @@
   .create-cart-button:hover {
     background-color: #d28c4c;
   }
+
+  .signoutContainer {
+    display: flex;
+    justify-content: flex-end; /* Aligns the button to the right */
+    /* margin-top: 20px; */
+  }
   

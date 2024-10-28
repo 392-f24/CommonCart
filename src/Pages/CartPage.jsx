@@ -4,13 +4,11 @@ import './CartPage.css'
 import { SignOut } from './SignIn';
 import CartItem from '../components/CartPageComponents/CartItem';
 import CreateCartModal from '../components/CartPageComponents/CreateCartModal';
-import AddToCartModal from '../components/AddToCart';
 
 const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
 
-  //To Be moved
-  const [showAddCartModal, setAddCartModal] = useState(false);
+
 
   // Example cart data
   const [carts, setCarts] = useState([
@@ -28,17 +26,6 @@ const CartPage = () => {
     const handleAddCart = (newCart) => {
       setCarts([...carts, newCart]);
     };
-    const navigate = useNavigate();
-    const location = useLocation();
-    
-    //TODO: remove this is just to show the data getting sent from Go Shopping
-    useEffect(() => {
-      const { destOnly, cartKeysOnly } = location.state || {};
-      if(destOnly && cartKeysOnly){
-        console.log(destOnly);
-        console.log(cartKeysOnly);
-      }
-    }, [location.state]);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -76,24 +63,20 @@ const CartPage = () => {
             >
               + Create Cart
             </button>
+            
         </div>
+        <div className="signoutContainer">
+          <button className="create-cart-button" onClick={SignOut}>
+            Sign Out
+          </button>
+        </div>
+        
       </div>
-{/* <<<<<<< HEAD
-      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} />
-
-        <button className="create-cart-button" onClick={() => {
-            setAddCartModal(true);
-          }}> Add Item to Cart </button>
-
-          {showAddCartModal && (
-            <AddToCartModal
-              closeModal={() => setAddCartModal(false)}
-            />
-          )}
 
 
 
-======= */}
+
+
       <CreateCartModal show={showModal} onClose={() => setShowModal(false)} onAddCart={handleAddCart} />
     </div>
   );
