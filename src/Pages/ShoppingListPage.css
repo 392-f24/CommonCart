@@ -13,14 +13,14 @@
 
 /* Wrapper for cart list and button */
 .shoppinglist-content-wrapper {
-    padding: 0 50px; 
+    /* padding: 0 50px;  */
     flex-grow: 1; 
     }
       
   
   .shoppinglist-page h1 {
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 15px;
     color: #FAC16B; /* bright yellow color for the title */
     font-size: 40px;
     font-family: 'Josefin Sans';

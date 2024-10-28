@@ -2,44 +2,43 @@ import React, { useState } from 'react';
 import './CreateCartModal.css';
 import SearchResultItem from './SearchResultItem';
 import AddedItem from './AddedItem';
-
-const mockUserDatabase = [
-  'Haichen XU', 'Jane Smith', 'Alice Johnson', 'Bob Brown', 'Charlie White',
-  'David Green', 'Eva Black', 'George Yellow', 'Hannah Blue', 'Isabella Gray',
-  'Jack Purple', 'Kathy Pink', 'Liam Red', 'Mia Orange', 'Noah Silver',
-  'Olivia Gold', 'Paul Copper', 'Quinn Bronze', 'Rachel Emerald', 'Sam Sapphire'
-];
-
+import { useDbUpdate, useDbData } from '../../utilities/firebase';
 
 const mockStoreDatabase = [
-  'Walmart', 'Wholefood' ,'Sams', 'Trader Joes','Jewel Osco','Target' 
+  'Walmart', 'Wholefood', 'Sams', "Trader Joes's", 'Jewel Osco', 'Target' 
 ];
-const CreateCartModal = ({ show, onClose , onAddCart }) => {
-  
-  // State for the cart name and user search inputs
+
+const CreateCartModal = ({ show, onClose, onAddCart }) => {
   const [cartName, setCartName] = useState('');
   const [userSearch, setUserSearch] = useState('');
   const [matchingUsers, setMatchingUsers] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
-  // states for store search
   const [storeSearch, setStoreSearch] = useState('');
   const [matchingStores, setMatchingStores] = useState([]);
   const [addedStores, setAddedStores] = useState([]);
 
-  // Click handler for the "Create" button
+  const [updateData] = useDbUpdate('/Cart');
+  const [usersData] = useDbData('/users');
+
+  // console.log(usersData);
+
   const handleCreateClick = () => {
     if (cartName) {
       const newCart = {
         title: cartName,
-        paymentType: 'One time Payment',
+        paymentType: 'One-time Payment',
         paymentDue: 'Next payment due',
+        shoppingStores: addedStores,
+        users: addedUsers,
+        items: {},
+        imageUrls: ""
       };
 
-      // Use the callback to add the new cart
-      onAddCart(newCart);
+      // Save new cart to Firebase
+      updateData({ [Date.now()]: newCart });
+
+      // Reset states and close modal
       onClose();
-      
-      // Reset states
       setCartName('');
       setUserSearch('');
       setAddedUsers([]);
@@ -47,74 +46,70 @@ const CreateCartModal = ({ show, onClose , onAddCart }) => {
       setAddedStores([]);
     }
   };
-  
-  // Only render the modal if 'show' is true
+
   if (!show) return null;
 
-  // Click handler for overlay to close modal
   const handleOverlayClick = (e) => {
     if (e.target.className === 'modal-overlay') {
       onClose();
     }
   };
-  //////////////////////////////////////////////////
-  const handleSearch = () => {
+
+  const handleUserSearch = () => {
     if (userSearch.trim() === '') {
       setMatchingUsers([]);
       return;
     }
-    // Simulate filtering users 
-  const filteredUsers = mockUserDatabase
-      .filter((user) => user.toLowerCase().includes(userSearch.toLowerCase()))
-      .slice(0, 10); // Limit to 10 users
-  
-    setMatchingUsers(filteredUsers);
+
+    // Filter users based on displayName using the `userSearch` term
+    const filteredUsers = Object.entries(usersData || {})
+      .filter(([, user]) =>
+        user.displayName.toLowerCase().includes(userSearch.toLowerCase())
+      )
+      .slice(0, 10);
+
+    setMatchingUsers(filteredUsers.map(([id, user]) => ({ id, displayName: user.displayName })));
   };
-  
-  const handleAddItem = (name) => {
-    if (!addedUsers.includes(name)) {
-      setAddedUsers([...addedUsers, name]);
+
+  const handleAddUser = (user) => {
+    if (!addedUsers.some((addedUser) => addedUser.id === user.id)) {
+      setAddedUsers([...addedUsers, user]);
     }
     setMatchingUsers([]);
   };
 
-  const handleDeleteAddedItem = (name) => {
-    setAddedUsers(addedUsers.filter((user) => user !== name));
+  const handleDeleteAddedUser = (id) => {
+    setAddedUsers(addedUsers.filter((user) => user.id !== id));
   };
-  // Same filter to handle store search//////////////////////////////
+
   const handleStoreSearch = () => {
     if (storeSearch.trim() === '') {
       setMatchingStores([]);
       return;
     }
-  
-    // Simulate filtering stores
     const filteredStores = mockStoreDatabase
       .filter((store) => store.toLowerCase().includes(storeSearch.toLowerCase()))
-      .slice(0, 5); // Limit to 10 stores
-  
+      .slice(0, 5);
     setMatchingStores(filteredStores);
   };
-  
+
   const handleAddStore = (store) => {
     if (!addedStores.includes(store)) {
       setAddedStores([...addedStores, store]);
     }
-    setMatchingStores([]); // Close the dropdown after adding
+    setMatchingStores([]);
   };
-  
+
   const handleDeleteAddedStore = (store) => {
     setAddedStores(addedStores.filter((s) => s !== store));
   };
-  
-  //////////////////////////////////////////////////////////////////
+
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <button className="close-button" onClick={onClose}>×</button>
         <h2>Create Cart</h2>
   
-        {/* Cart Name Input */}
         <input
           type="text"
           placeholder="cart name"
@@ -122,7 +117,7 @@ const CreateCartModal = ({ show, onClose , onAddCart }) => {
           value={cartName}
           onChange={(e) => setCartName(e.target.value)}
         />
-  
+
         {/* Search for User Input */}
         <div className="search-container">
           <div className="search-bar">
@@ -133,30 +128,30 @@ const CreateCartModal = ({ show, onClose , onAddCart }) => {
               value={userSearch}
               onChange={(e) => setUserSearch(e.target.value)}
             />
-            <button className="search-button" onClick={handleSearch}>
+            <button className="search-button" onClick={handleUserSearch}>
               🔍
             </button>
           </div>
-  
+
           {/* Matching Users Dropdown */}
           {matchingUsers.length > 0 && (
             <ul className="user-dropdown">
-              {matchingUsers.map((user, index) => (
-                <li key={index} className="user-dropdown-item">
-                  <SearchResultItem label={user} onAdd={handleAddItem} />
+              {matchingUsers.map((user) => (
+                <li key={user.id} className="user-dropdown-item">
+                  <SearchResultItem label={user.displayName} onAdd={() => handleAddUser(user)} />
                 </li>
               ))}
             </ul>
           )}
         </div>
-  
+
         {/* Display Added Users */}
         <div className="added-users-container">
-          {addedUsers.map((name, index) => (
-            <AddedItem key={index} name={name} onDelete={handleDeleteAddedItem} />
+          {addedUsers.map((user) => (
+            <AddedItem key={user.id} name={user.displayName} onDelete={() => handleDeleteAddedUser(user.id)} />
           ))}
         </div>
-  
+
         {/* Search for Shopping Store Input */}
         <div className="search-container">
           <div className="search-bar">
@@ -171,26 +166,24 @@ const CreateCartModal = ({ show, onClose , onAddCart }) => {
               🔍
             </button>
           </div>
-  
-          {/* Matching Stores Dropdown */}
+
           {matchingStores.length > 0 && (
             <ul className="store-dropdown">
               {matchingStores.map((store, index) => (
                 <li key={index} className="store-dropdown-item">
-                  <SearchResultItem label={store} onAdd={handleAddStore} />
+                  <SearchResultItem label={store} onAdd={() => handleAddStore(store)} />
                 </li>
               ))}
             </ul>
           )}
         </div>
-  
-        {/* Display Added Stores */}
+
         <div className="added-stores-container">
           {addedStores.map((store, index) => (
-            <AddedItem key={index} name={store} onDelete={handleDeleteAddedStore} />
+            <AddedItem key={index} name={store} onDelete={() => handleDeleteAddedStore(store)} />
           ))}
         </div>
-  
+
         <div className="button-container">
           <button className="create-button" onClick={handleCreateClick}>
             Create
@@ -199,6 +192,6 @@ const CreateCartModal = ({ show, onClose , onAddCart }) => {
       </div>
     </div>
   );
-  
 };
+
 export default CreateCartModal;
