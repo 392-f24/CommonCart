@@ -23,11 +23,12 @@ function CheckList() {
       .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]));
 
     // Extract items with status false from filtered carts
-    const initialItems = filteredCarts.flatMap(([, cartData]) =>
+    const initialItems = filteredCarts.flatMap(([cartId, cartData]) =>
       Object.entries(cartData.items)
         .filter(([, itemData]) => itemData.status === false && itemData.store === destOnly[0])
         .map(([id, itemData]) => ({
           id,
+          cartId,
           itemName: itemData.itemName,
           status: itemData.status,
           store: itemData.store,
@@ -55,16 +56,14 @@ function CheckList() {
     const updates = {};
     items.forEach((item) => {
       if (item.status === true) {
-        cartKeysOnly.forEach((cartId) => {
-          const itemPath = `/${cartId}/items/${item.id}`;
-          updates[itemPath] = {
-            itemName: item.itemName,
-            status: true,
-            store: item.store,
-            userAdded: item.userAdded,
-            userFulfilled: user?.uid || ""
-          };
-        });
+        const itemPath = `/${item.cartId}/items/${item.id}`;
+        updates[itemPath] = {
+          itemName: item.itemName,
+          status: true,
+          store: item.store,
+          userAdded: item.userAdded,
+          userFulfilled: user?.uid || ""
+        };
       }
     });
 
@@ -144,9 +143,9 @@ function CheckList() {
           style={{
             backgroundColor: '#F5EDE0',
             fontFamily: 'Josefin Sans',
-            padding: '1rem', 
+            padding: '1rem',
             borderRadius: '8px',
-            display: 'flex', 
+            display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center'
