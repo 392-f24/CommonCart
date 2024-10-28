@@ -38,6 +38,7 @@ const CartPage = () => {
               title={cart.title}
               paymentType={cart.paymentType}
               paymentDue={cart.paymentDue}
+              // onClick={() => handleCartClick(cart.title)}
             />
           ))}
         </div>

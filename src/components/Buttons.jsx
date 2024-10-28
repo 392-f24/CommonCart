@@ -8,6 +8,8 @@ export const OrangeButton = ({onClick, title}) => (
     <Button className="orange-button" onClick={onClick}>{title}</Button>
 );
 
+
+
 export function BackButton() {
     const navigate = useNavigate();
 
@@ -22,6 +24,19 @@ export function BackButton() {
     );
 }
 
+export function BackButtonMyCart() {
+    const navigate = useNavigate();
+
+    return (
+        <Button
+            variant="link"
+            onClick={() => navigate('/')}
+            style={{ position: 'absolute', top: '20px', left: '20px', padding: '0' }}
+        >
+            <img src={BackButtonIcon} alt="Back" style={{ width: '48px', height: '48px' }} />
+        </Button>
+    );
+}
 
 export const OptionDropdown = ({ title, newTitle, onSelect, options, multiOption }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
