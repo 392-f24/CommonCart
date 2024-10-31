@@ -7,10 +7,17 @@ import { useDbData } from '../utilities/firebase';
 
 
 const GoShoppingPage = () => {
-    const [keyCart, setKeyCart] = useState({});
+  const [keyCart, setKeyCart] = useState({});
   const [data, error] = useDbData('/Cart');
+  // map of cart names and the stores under that cart 
+  // TODO: make sure destinations are removed from the cart when 
+  // there are no items in the cart with that destination, or items 
+  // are deleted
+  const [cartDestinationMap, setCartDestinationMap] = useState({}); 
   const [cartOptions, setCartOptions] = useState([]);
   const [destinationOptions, setDestinationOptions] = useState([]);
+  const [destination, setDestination] = useState(["Select Destination"]);
+  const [cart, setCart] = useState(["Select Cart"]);
 
 
   useEffect(() => {
@@ -23,13 +30,15 @@ const GoShoppingPage = () => {
             const allCarts = Object.values(data);
             const allKeys = Object.keys(data);
 
-            // Create new objects for `keyCart`, `cartOptions`, and `destinationOptions`
+            // Create new objects for `keyCart`, `cartDestinationMap`, `cartOptions`, and `destinationOptions`
             const newKeyCart = {};
+            const newCartDestinationMap = {};
             const newCartOptions = [];
             const newDestinationOptions = [];
 
             allCarts.forEach((c, index) => {
                 newKeyCart[c.title] = allKeys[index];
+                newCartDestinationMap[c.title] = c.shoppingStores;
                 newCartOptions.push(c.title);
 
                 c.shoppingStores.forEach((store) => {
@@ -39,24 +48,44 @@ const GoShoppingPage = () => {
 
             // Remove duplicates using Set
             setKeyCart(newKeyCart);
+            setCartDestinationMap(newCartDestinationMap);
             setCartOptions([...new Set(newCartOptions)]);
             setDestinationOptions([...new Set(newDestinationOptions)]);
         }
     }, [data, error]); // Only re-run effect if `data` or `error` changes
-
-    const [destination, setDestination] = useState(["Select Destination"]);
-    const [cart, setCart] = useState(["Select Cart"]);
 
     const navigate = useNavigate();
     const DirectCheckList = () => {
         const cartsOnly = cart.slice(1);
         const destOnly = destination.slice(1);
         const cartKeysOnly = cartsOnly.map((c) => keyCart[c]);
-        // console.log(cartKeysOnly);
+        console.log(destOnly);
         navigate('/go-shopping/checklist', { state: { destOnly, cartKeysOnly } } );
         setDestination(["Select Destination"]);
         setCart(["Select Cart"])
       };
+
+      // handle set destination: when a destination is selected, the only carts that become visisble
+      // are the carts that have items for that destination
+      const handleSetDestination = (destination) => {
+        setDestination(destination);
+        // create a new list of carts, that include the selected destination
+        const newCart = [];
+        Object.keys(cartDestinationMap).forEach((cartOption) => {
+            if (cartDestinationMap[cartOption].includes(destination[1])) {
+                newCart.push(cartOption);
+            } else if (cart.includes(cartOption)) {
+                // if a cart is previously selected, but does not include the chosen destination
+                // it is unselected
+                // console.log(cartOption);
+                setCart(["Select Cart"]);             
+            }
+        }
+        );
+        console.log(cart);
+        setCartOptions(newCart);
+      }
+
       return(
         <div className="center-container">
             <Card className="custom-card" style={{ width: '18rem' }}>
@@ -67,7 +96,7 @@ const GoShoppingPage = () => {
                         <OptionDropdown 
                             title={"Select Destination"}
                             newTitle={destination} 
-                            onSelect={setDestination} 
+                            onSelect={handleSetDestination} 
                             options={destinationOptions} 
                             multiOption={false}
                         />
