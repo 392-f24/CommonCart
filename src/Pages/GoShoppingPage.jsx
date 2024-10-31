@@ -82,9 +82,31 @@ const GoShoppingPage = () => {
             }
         }
         );
-        console.log(cart);
         setCartOptions(newCart);
       }
+
+      // handle set cart: when an option is selected, the only destinations that are shown
+      // are the destinations that are included for that option
+      useEffect(() => {
+        // create a list of destinations that are included in the selected carts
+        const newDest = [];
+        if( cart.length !== 1 ){
+            cart.forEach((c, index) => {
+                if( index !== 0 ){
+                    newDest.push(...cartDestinationMap[c]);
+                    console.log(newDest);
+                }
+            });
+        }
+        else {
+            Object.values(cartDestinationMap).forEach((d) => {
+                newDest.push(...d);
+            })
+        }
+
+        setDestinationOptions((prev) => { return [...new Set(newDest)] });
+
+      }, [cart]);
 
       return(
         <div className="center-container">
