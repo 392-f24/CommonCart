@@ -41,9 +41,9 @@ const GoShoppingPage = () => {
                 newCartDestinationMap[c.title] = c.shoppingStores;
                 newCartOptions.push(c.title);
 
-                c.shoppingStores.forEach((store) => {
+                {c.shoppingStores && c.shoppingStores.forEach((store) => {
                 newDestinationOptions.push(store);
-                });
+                })};
             });
 
             // Remove duplicates using Set
@@ -92,7 +92,7 @@ const GoShoppingPage = () => {
         const newDest = [];
         if( cart.length !== 1 ){
             cart.forEach((c, index) => {
-                if( index !== 0 ){
+                if( index !== 0 && cartDestinationMap[c]){
                     newDest.push(...cartDestinationMap[c]);
                     console.log(newDest);
                 }
@@ -100,7 +100,7 @@ const GoShoppingPage = () => {
         }
         else {
             Object.values(cartDestinationMap).forEach((d) => {
-                newDest.push(...d);
+                {d &&newDest.push(...d)};
             })
         }
 

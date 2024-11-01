@@ -26,7 +26,7 @@ function CheckList() {
     // Extract items with status false from filtered carts
     const initialItems = filteredCarts.flatMap(([cartId, cartData]) =>
       Object.entries(cartData.items)
-        .filter(([, itemData]) => itemData.status === false && itemData.store === destOnly[0])
+        .filter(([, itemData]) => itemData.status === false && (itemData.store === destOnly[0] || itemData.store === 'Any Store'))
         .map(([id, itemData]) => ({
           id,
           cartId,
@@ -39,7 +39,6 @@ function CheckList() {
     );
 
     setItems(initialItems);
-    // console.log("items", items);
   }
 
 
@@ -54,21 +53,37 @@ function CheckList() {
 
   // Update data on "Finish Shopping"
   const finishShopping = () => {
-    const updates = {};
+    const itemUpdates = {};
+    const storeUpdates = [];
     items.forEach((item) => {
       if (item.status === true) {
         const itemPath = `/${item.cartId}/items/${item.id}`;
-        updates[itemPath] = {
+        itemUpdates[itemPath] = {
           itemName: item.itemName,
           status: true,
           store: item.store,
           userAdded: item.userAdded,
           userFulfilled: user?.uid || ""
         };
+      } else {
+        storeUpdates.push(item.store);
       }
     });
-
-    updateData(updates);
+    console.log([...new Set(storeUpdates)]);
+    if( !storeUpdates.includes(destOnly[0]) ){
+      console.log(`${destOnly[0]} is in ${storeUpdates}`);
+      // remove the destOnly from the selected carts
+      cartKeysOnly.forEach((key) => {
+        const storesPath = `/${key}/shoppingStores`;
+        const newStores = cartData[key].shoppingStores.filter((store) => store !== destOnly[0]);
+        console.log(newStores);
+        updateData({[storesPath]: [...newStores]});
+      });
+      
+    }
+    // cartKeysOnly.forEach((key) => updateData({[cartData[key].shoppingStores]: [...new Set(storeUpdates)]}));
+    
+    updateData(itemUpdates);
 
     // Show popup and redirect
     setShowPopup(true);
