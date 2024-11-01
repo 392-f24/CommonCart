@@ -59,7 +59,6 @@ const GoShoppingPage = () => {
         const cartsOnly = cart.slice(1);
         const destOnly = destination.slice(1);
         const cartKeysOnly = cartsOnly.map((c) => keyCart[c]);
-        console.log(destOnly);
         navigate('/go-shopping/checklist', { state: { destOnly, cartKeysOnly } } );
         setDestination(["Select Destination"]);
         setCart(["Select Cart"])
@@ -77,7 +76,6 @@ const GoShoppingPage = () => {
             } else if (cart.includes(cartOption)) {
                 // if a cart is previously selected, but does not include the chosen destination
                 // it is unselected
-                // console.log(cartOption);
                 setCart(["Select Cart"]);             
             }
         }
@@ -94,7 +92,6 @@ const GoShoppingPage = () => {
             cart.forEach((c, index) => {
                 if( index !== 0 && cartDestinationMap[c]){
                     newDest.push(...cartDestinationMap[c]);
-                    console.log(newDest);
                 }
             });
         }

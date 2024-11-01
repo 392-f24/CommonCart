@@ -69,20 +69,15 @@ function CheckList() {
         storeUpdates.push(item.store);
       }
     });
-    console.log([...new Set(storeUpdates)]);
     if( !storeUpdates.includes(destOnly[0]) ){
-      console.log(`${destOnly[0]} is in ${storeUpdates}`);
       // remove the destOnly from the selected carts
       cartKeysOnly.forEach((key) => {
         const storesPath = `/${key}/shoppingStores`;
         const newStores = cartData[key].shoppingStores.filter((store) => store !== destOnly[0]);
-        console.log(newStores);
         updateData({[storesPath]: [...newStores]});
       });
       
-    }
-    // cartKeysOnly.forEach((key) => updateData({[cartData[key].shoppingStores]: [...new Set(storeUpdates)]}));
-    
+    }    
     updateData(itemUpdates);
 
     // Show popup and redirect

@@ -20,8 +20,6 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
   const [updateData] = useDbUpdate('/Cart');
   const [usersData] = useDbData('/users');
 
-  // console.log(usersData);
-
   const handleCreateClick = () => {
     if (cartName) {
       const newCart = {
