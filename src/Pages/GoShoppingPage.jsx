@@ -71,7 +71,7 @@ const GoShoppingPage = () => {
         // create a new list of carts, that include the selected destination
         const newCart = [];
         Object.keys(cartDestinationMap).forEach((cartOption) => {
-            if (cartDestinationMap[cartOption].includes(destination[1])) {
+            if (cartDestinationMap[cartOption].includes(destination[1]) || cartDestinationMap[cartOption].includes('Any Store')) {
                 newCart.push(cartOption);
             } else if (cart.includes(cartOption)) {
                 // if a cart is previously selected, but does not include the chosen destination

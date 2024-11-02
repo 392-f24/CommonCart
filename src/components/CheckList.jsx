@@ -21,7 +21,9 @@ function CheckList() {
     // Filter carts by cartKeysOnly and destination
     const filteredCarts = Object.entries(cartData)
       .filter(([cartId]) => cartKeysOnly.includes(cartId))
-      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]));
+      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]) || 
+                                cartData.shoppingStores.includes('Any Store'));
+
 
     // Extract items with status false from filtered carts
     const initialItems = filteredCarts.flatMap(([cartId, cartData]) =>
@@ -69,12 +71,17 @@ function CheckList() {
         storeUpdates.push(item.store);
       }
     });
-    if( !storeUpdates.includes(destOnly[0]) ){
+    if( !storeUpdates.includes(destOnly[0]) || !storeUpdates.includes('Any Store')){
       // remove the destOnly from the selected carts
       cartKeysOnly.forEach((key) => {
         const storesPath = `/${key}/shoppingStores`;
-        const newStores = cartData[key].shoppingStores.filter((store) => store !== destOnly[0]);
-        updateData({[storesPath]: [...newStores]});
+        const newStores = [];
+        cartData[key].shoppingStores.forEach((store) => {
+          if (store !== destOnly[0] && store !== 'Any Store') {
+            newStores.push(store);
+          }
+      });
+      newStores.length === 0 ? updateData({[storesPath]: []}):updateData({[storesPath]: [...newStores]});
       });
       
     }    

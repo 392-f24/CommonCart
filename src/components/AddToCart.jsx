@@ -33,7 +33,7 @@ const AddToCartModal = ({ closeModal, cartId, cartTitle }) => {
         const newItem = {
             itemName: item,
             status: status,
-            store: storeName ? storeName : 'Any Store',
+            store: storeName ? storeName.toLowerCase() : 'Any Store',
             userAdded: user.uid,
             userFulfilled: userFulfilled
         };
@@ -42,10 +42,12 @@ const AddToCartModal = ({ closeModal, cartId, cartTitle }) => {
             if ( currCartData.shoppingStores ) {
                 const existingStores = currCartData.shoppingStores;
                 if ( !existingStores.includes(storeName) ) {
-                    updateCartData({ shoppingStores: [...currCartData.shoppingStores, storeName] });
+                    updateCartData({ shoppingStores: [...currCartData.shoppingStores, storeName.toLowerCase()] });
                 }
             } else {
-                updateCartData({ shoppingStores: ['Any Store']});
+                storeName === '' ? 
+                updateCartData({ shoppingStores: ['Any Store'] }):
+                updateCartData({ shoppingStores: [storeName.toLowerCase()] });
             }
             
         } catch (error){
@@ -73,37 +75,19 @@ const AddToCartModal = ({ closeModal, cartId, cartTitle }) => {
             
             <div className="body">
                 <div className="address">
-
-                    {/* Select from all carts */}
-                        {/* <select
-                            className="input fullWidth"
-                            value={cartId}
-                            onChange={(e) => setCartId(e.target.value)}
-                        >
-                            <option value="" disabled>Select a Cart</option>
-                            {cartOptions.map((cart) => (
-                                <option key={cart.id} value={cart.id}>
-                                    {cart.title}
-                                </option>
-                            ))}
-                        </select> */}
-
-                        <input
-                            className="input fullWidth"
-                            value={storeName}
-                            onChange={(e) => setStoreName(e.target.value)}
-                            placeholder="Enter a store name: default Any Store"
-                        />
                         <input
                             className="input fullWidth"
                             value={item}
                             onChange={(e) => setItem(e.target.value)}
                             placeholder="Enter an Item"
                         />
+                        <input
+                            className="input fullWidth"
+                            value={storeName}
+                            onChange={(e) => setStoreName(e.target.value)}
+                            placeholder="Enter a store name: default Any Store"
+                        />
                     </div>
-
-
-
             </div>
 
             <div className="footer">
