@@ -21,12 +21,14 @@ function CheckList() {
     // Filter carts by cartKeysOnly and destination
     const filteredCarts = Object.entries(cartData)
       .filter(([cartId]) => cartKeysOnly.includes(cartId))
-      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]));
+      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]) || 
+                                cartData.shoppingStores.includes('Any Store'));
+
 
     // Extract items with status false from filtered carts
     const initialItems = filteredCarts.flatMap(([cartId, cartData]) =>
       Object.entries(cartData.items)
-        .filter(([, itemData]) => itemData.status === false && itemData.store === destOnly[0])
+        .filter(([, itemData]) => itemData.status === false && (itemData.store === destOnly[0] || itemData.store === 'Any Store'))
         .map(([id, itemData]) => ({
           id,
           cartId,
@@ -39,7 +41,6 @@ function CheckList() {
     );
 
     setItems(initialItems);
-    // console.log("items", items);
   }
 
 
@@ -54,21 +55,37 @@ function CheckList() {
 
   // Update data on "Finish Shopping"
   const finishShopping = () => {
-    const updates = {};
+    const itemUpdates = {};
+    const storeUpdates = [];
     items.forEach((item) => {
       if (item.status === true) {
         const itemPath = `/${item.cartId}/items/${item.id}`;
-        updates[itemPath] = {
+        itemUpdates[itemPath] = {
           itemName: item.itemName,
           status: true,
           store: item.store,
           userAdded: item.userAdded,
           userFulfilled: user?.uid || ""
         };
+      } else {
+        storeUpdates.push(item.store);
       }
     });
-
-    updateData(updates);
+    if( !storeUpdates.includes(destOnly[0]) || !storeUpdates.includes('Any Store')){
+      // remove the destOnly from the selected carts
+      cartKeysOnly.forEach((key) => {
+        const storesPath = `/${key}/shoppingStores`;
+        const newStores = [];
+        cartData[key].shoppingStores.forEach((store) => {
+          if (store !== destOnly[0] && store !== 'Any Store') {
+            newStores.push(store);
+          }
+      });
+      newStores.length === 0 ? updateData({[storesPath]: []}):updateData({[storesPath]: [...newStores]});
+      });
+      
+    }    
+    updateData(itemUpdates);
 
     // Show popup and redirect
     setShowPopup(true);

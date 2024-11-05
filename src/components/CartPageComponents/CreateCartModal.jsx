@@ -4,9 +4,9 @@ import SearchResultItem from './SearchResultItem';
 import AddedItem from './AddedItem';
 import { useDbUpdate, useDbData } from '../../utilities/firebase';
 
-const mockStoreDatabase = [
-  'Walmart', 'Wholefood', 'Sams', "Trader Joes's", 'Jewel Osco', 'Target' 
-];
+// const mockStoreDatabase = [
+//   'Walmart', 'Wholefood', 'Sams', "Trader Joes's", 'Jewel Osco', 'Target' 
+// ];
 
 const CreateCartModal = ({ show, onClose, onAddCart }) => {
   const [cartName, setCartName] = useState('');
@@ -20,15 +20,13 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
   const [updateData] = useDbUpdate('/Cart');
   const [usersData] = useDbData('/users');
 
-  // console.log(usersData);
-
   const handleCreateClick = () => {
     if (cartName) {
       const newCart = {
         title: cartName,
         paymentType: 'One-time Payment',
         paymentDue: '',
-        shoppingStores: addedStores,
+        shoppingStores: [],
         users: addedUsers,
         items: {},
         imageUrls: ""
@@ -42,8 +40,6 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
       setCartName('');
       setUserSearch('');
       setAddedUsers([]);
-      setStoreSearch('');
-      setAddedStores([]);
     }
   };
 
@@ -82,27 +78,27 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
     setAddedUsers(addedUsers.filter((user) => user.id !== id));
   };
 
-  const handleStoreSearch = () => {
-    if (storeSearch.trim() === '') {
-      setMatchingStores([]);
-      return;
-    }
-    const filteredStores = mockStoreDatabase
-      .filter((store) => store.toLowerCase().includes(storeSearch.toLowerCase()))
-      .slice(0, 5);
-    setMatchingStores(filteredStores);
-  };
+  // const handleStoreSearch = () => {
+  //   if (storeSearch.trim() === '') {
+  //     setMatchingStores([]);
+  //     return;
+  //   }
+  //   const filteredStores = mockStoreDatabase
+  //     .filter((store) => store.toLowerCase().includes(storeSearch.toLowerCase()))
+  //     .slice(0, 5);
+  //   setMatchingStores(filteredStores);
+  // };
 
-  const handleAddStore = (store) => {
-    if (!addedStores.includes(store)) {
-      setAddedStores([...addedStores, store]);
-    }
-    setMatchingStores([]);
-  };
+  // const handleAddStore = (store) => {
+  //   if (!addedStores.includes(store)) {
+  //     setAddedStores([...addedStores, store]);
+  //   }
+  //   setMatchingStores([]);
+  // };
 
-  const handleDeleteAddedStore = (store) => {
-    setAddedStores(addedStores.filter((s) => s !== store));
-  };
+  // const handleDeleteAddedStore = (store) => {
+  //   setAddedStores(addedStores.filter((s) => s !== store));
+  // };
 
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
@@ -153,7 +149,7 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
         </div>
 
         {/* Search for Shopping Store Input */}
-        <div className="search-container">
+        {/* <div className="search-container">
           <div className="search-bar">
             <input
               type="text"
@@ -182,7 +178,7 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
           {addedStores.map((store, index) => (
             <AddedItem key={index} name={store} onDelete={() => handleDeleteAddedStore(store)} />
           ))}
-        </div>
+        </div> */}
 
         <div className="button-container">
           <button className="create-button" onClick={handleCreateClick}>

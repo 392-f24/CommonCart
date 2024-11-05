@@ -41,9 +41,9 @@ const GoShoppingPage = () => {
                 newCartDestinationMap[c.title] = c.shoppingStores;
                 newCartOptions.push(c.title);
 
-                c.shoppingStores.forEach((store) => {
+                {c.shoppingStores && c.shoppingStores.forEach((store) => {
                 newDestinationOptions.push(store);
-                });
+                })};
             });
 
             // Remove duplicates using Set
@@ -59,7 +59,6 @@ const GoShoppingPage = () => {
         const cartsOnly = cart.slice(1);
         const destOnly = destination.slice(1);
         const cartKeysOnly = cartsOnly.map((c) => keyCart[c]);
-        console.log(destOnly);
         navigate('/go-shopping/checklist', { state: { destOnly, cartKeysOnly } } );
         setDestination(["Select Destination"]);
         setCart(["Select Cart"])
@@ -72,12 +71,11 @@ const GoShoppingPage = () => {
         // create a new list of carts, that include the selected destination
         const newCart = [];
         Object.keys(cartDestinationMap).forEach((cartOption) => {
-            if (cartDestinationMap[cartOption].includes(destination[1])) {
+            if (cartDestinationMap[cartOption].includes(destination[1]) || cartDestinationMap[cartOption].includes('Any Store')) {
                 newCart.push(cartOption);
             } else if (cart.includes(cartOption)) {
                 // if a cart is previously selected, but does not include the chosen destination
                 // it is unselected
-                // console.log(cartOption);
                 setCart(["Select Cart"]);             
             }
         }
@@ -92,15 +90,14 @@ const GoShoppingPage = () => {
         const newDest = [];
         if( cart.length !== 1 ){
             cart.forEach((c, index) => {
-                if( index !== 0 ){
+                if( index !== 0 && cartDestinationMap[c]){
                     newDest.push(...cartDestinationMap[c]);
-                    console.log(newDest);
                 }
             });
         }
         else {
             Object.values(cartDestinationMap).forEach((d) => {
-                newDest.push(...d);
+                {d &&newDest.push(...d)};
             })
         }
 
