@@ -2,7 +2,7 @@ import React from 'react';
 import './CartItem.css';
 import { useNavigate } from 'react-router-dom';
 
-const CartItem = ({ title, paymentType, paymentDue }) => {
+const CartItem = ({ title, description, memberCount }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -15,11 +15,8 @@ const CartItem = ({ title, paymentType, paymentDue }) => {
   return (
     <div className="cart-item" onClick={handleClick}>
       <h3>{title}</h3>
-      <div className="payment-info">
-        <span className="clock-icon">🕗</span>
-        <span className="payment-type">{paymentType}</span>
-      </div>
-      <p className="payment-due">{paymentDue}</p>
+      <p className="cart-description">{description}</p>
+      <p className="cart-members">Members: {memberCount}</p>
     </div>
   );
 };
