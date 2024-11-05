@@ -13,7 +13,7 @@
 }
 
 
-.cartNav, .receiptNav .shoppingNav {
+.cartNav, .summariesNav .shoppingNav {
   display: flex;
   justify-content: center; 
   align-items: center;
@@ -28,7 +28,7 @@
   grid-column: 2;
 }
 
-.receiptNav {
+.summariesNav {
   grid-column: 3;
 }
 
