@@ -8,7 +8,7 @@ import './App.css';
 
 import Navigationbar from './components/Navigation';
 import CartPage from './Pages/CartPage';
-import ReceiptPage from './Pages/receiptPage';
+import SummariesPage from './Pages/SummariesPage';
 import GoShoppingPage from './Pages/GoShoppingPage';
 import ShoppingListPage from './Pages/ShoppingListPage';
 import CheckList from './components/CheckList';
@@ -36,7 +36,7 @@ const App = () => {
             <div className="content flex-grow"> 
               <Routes>
                 <Route path="/" element={<CartPage />} />
-                <Route path="/receipts" element={<ReceiptPage />} />
+                <Route path="/summaries" element={<SummariesPage />} />
                 <Route path="/go-shopping" element={<GoShoppingPage />}/>
                 <Route path="/cart/:title" element={<ShoppingListPage />} />
                 <Route path="/go-shopping/checklist" element={<CheckList />} />
