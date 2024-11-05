@@ -31,16 +31,16 @@ const CartLink = ({ isSelected, onClick }) => {
     );
   };
   
-  const ReceiptLink = ({ isSelected, onClick }) => {
+  const SummariesLink = ({ isSelected, onClick }) => {
     return (
-      <NavLink to="/receipts" className="nav-item" onClick={onClick}>
+      <NavLink to="/summaries" className="nav-item" onClick={onClick}>
         <div className="navLinkContent">
           <FontAwesomeIcon
               icon={faMoneyCheckDollar}
               color={isSelected ? 'white' : 'black'}
               size='lg'
             />
-          <p className={`navText ${isSelected ? 'selectedText' : ''}`}>Receipt</p>
+          <p className={`navText ${isSelected ? 'selectedText' : ''}`}>Summaries</p>
         </div>
       </NavLink>
     );
@@ -84,22 +84,16 @@ const Navigationbar = () => {
           </Nav.Link>
 
           <Nav.Link className="shoppingNav">
-            {/* <NavLink to="/receipts">
-              <p className="navText">Receipt</p>
-            </NavLink> */}
             <ShoppingLink 
               isSelected={selectedLink === 'go-shopping'} 
               onClick={() => setSelectedLink('go-shopping')} 
             />
           </Nav.Link>
 
-          <Nav.Link className="receiptNav">
-            {/* <NavLink to="/receipts">
-              <p className="navText">Receipt</p>
-            </NavLink> */}
-            <ReceiptLink 
-              isSelected={selectedLink === 'receipt'} 
-              onClick={() => setSelectedLink('receipt')} 
+          <Nav.Link className="summariesNav">
+            <SummariesLink
+              isSelected={selectedLink === 'summaries'} 
+              onClick={() => setSelectedLink('summaries')} 
             />
           </Nav.Link>
 
