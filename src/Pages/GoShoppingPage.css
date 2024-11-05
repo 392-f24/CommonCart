@@ -1,0 +1,30 @@
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    position: relative;
+}
+
+.center-container .card {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Optional: add shadow for styling */
+    border-radius: 8px;
+}
+
+.custom-header {
+    border-bottom: none;
+    background-color: #FCF0E2;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.custom-card {
+    font-family: "Josefin Sans";
+    background-color: #FCF0E2;
+    color: #000;
+    padding: 20px;
+}
+

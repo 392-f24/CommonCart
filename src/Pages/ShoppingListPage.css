@@ -1,0 +1,106 @@
+.shoppinglist-page {
+    background-color: #334256; 
+    color: #F5EDE0;
+    padding: 20px;
+    min-height: 100vh;
+    min-width: 100vw;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    padding-top: 40px;
+  }
+
+/* Wrapper for cart list and button */
+.shoppinglist-content-wrapper {
+    /* padding: 0 50px;  */
+    flex-grow: 1; 
+    }
+      
+  
+  .shoppinglist-page h1 {
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #FAC16B; /* bright yellow color for the title */
+    font-size: 40px;
+    font-family: 'Josefin Sans';
+    text-align: center;
+  }
+.shoppinglist-card {
+    background-color: #F5EDE0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 20px;
+} 
+
+.shoppinglist-card h1 {
+    font-size: 28px;
+    color: #334256;
+    margin-bottom: 15px; 
+}
+
+.shoppinglist-item {
+    display: flex;
+    align-items: center; 
+    background-color: #EAE2D6;
+    padding: 15px; 
+    border-radius: 8px;
+    margin-bottom: 10px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+    list-style-type: none; /* remove bullet points */
+    padding: 0;
+    margin: 0; 
+  }
+  
+
+.shoppinglist-item h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #334256;
+}
+
+.shoppinglist-item p {
+    margin: 5px 0;
+    font-size: 14px; 
+    color: #000000; 
+}
+
+.user-initial {
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 10px; 
+  }
+  
+
+  .create-cart-button {
+    background-color: #FAC16B;
+    color: #000000;
+    padding: 10px 15px;
+    border: 3px solid #000000;
+    border-radius: 16px;
+    font-size: 22px;
+    font-family: 'Josefin Sans';
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s;
+    margin-right: 0;
+    margin-top:20px;
+    margin-bottom: 20px;
+  }
+  
+  .create-cart-button:hover {
+    background-color: #d28c4c;
+  }

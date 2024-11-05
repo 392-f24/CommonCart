@@ -20,7 +20,7 @@
   
   /* Wrapper for cart list and button */
   .cart-content-wrapper {
-    padding: 0 50px; /* Control padding for both cart-list and button */
+    /* padding: 0 50px; */
     flex-grow: 1; /* Allow cart list to grow and fill space */
   }
   
@@ -51,5 +51,11 @@
   
   .create-cart-button:hover {
     background-color: #d28c4c;
+  }
+
+  .signoutContainer {
+    display: flex;
+    justify-content: flex-end; /* Aligns the button to the right */
+    /* margin-top: 20px; */
   }
   

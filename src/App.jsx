@@ -1,16 +1,17 @@
-// import { useAuthState } from './utilities/firebase';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import SignIn from './pages/SignIn';
+import SignIn from './Pages/SignIn';
 import { useAuthState } from './utilities/firebase';
 import './App.css';
 
 import Navigationbar from './components/Navigation';
-import CartPage from './Pages/cartPage';
+import CartPage from './Pages/CartPage';
 import ReceiptPage from './Pages/receiptPage';
 import GoShoppingPage from './Pages/GoShoppingPage';
+import ShoppingListPage from './Pages/ShoppingListPage';
+import CheckList from './components/CheckList';
 
 
 const App = () => {
@@ -37,6 +38,8 @@ const App = () => {
                 <Route path="/" element={<CartPage />} />
                 <Route path="/receipts" element={<ReceiptPage />} />
                 <Route path="/go-shopping" element={<GoShoppingPage />}/>
+                <Route path="/cart/:title" element={<ShoppingListPage />} />
+                <Route path="/go-shopping/checklist" element={<CheckList />} />
                 {/* <Route path="/profile" element={<ProfilePage />} /> */}
 
               </Routes>
