@@ -1,0 +1,69 @@
+h1 {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: #FAC16B;
+    font-size: 40px;
+    font-family: 'Josefin Sans';
+    text-align: center;
+}
+
+h3 {
+    font-family: "Josefin Sans";
+    font-size: 1.2rem;
+    color: #333;
+    margin-top: 1rem;
+}
+
+.summaries-card {
+    width: 100%;
+    border: none;
+    background-color: #F5EDE0;
+    padding-top: 0.5rem;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1rem;
+}
+
+.loading-text {
+    font-family: "Josefin Sans";
+    font-size: 1.5rem;
+    color: #F5EDE0;
+    text-align: center;
+}
+
+.no-summaries {
+    font-family: "Josefin Sans";
+    font-size: 1.5rem;
+    color: #F5EDE0;
+    text-align: center;
+}
+
+.shoppinglist-item {
+    display: flex;
+    align-items: center;
+    background-color: #EAE2D6;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shoppinglist-item-text {
+    margin: 0;
+    color: #333;
+    font-size: 1.15rem;
+}
+
+.user-initial {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 10px;
+}

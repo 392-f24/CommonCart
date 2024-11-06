@@ -1,5 +1,4 @@
-import { Button } from 'react-bootstrap';
-import { signInWithGoogle, signOut, useDbUpdate } from '../utilities/firebase';
+import { signInWithGoogle, useDbUpdate } from '../utilities/firebase';
 import { OrangeButton } from '../Components/Buttons';
 import "./SignIn.css"
 
@@ -39,7 +38,5 @@ const SignIn = () => {
 
     );
 }
-export const SignOut = () =>(
-    <Button onClick={signOut}>Sing Out</Button>
-);
+
 export default SignIn;

@@ -3,6 +3,7 @@ import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import "./Buttons.css"
 import { useNavigate } from 'react-router-dom';
 import BackButtonIcon from './BackButton.svg';
+import { useEffect } from 'react';
 
 export const OrangeButton = ({onClick, title}) => (
     <Button className="orange-button" onClick={onClick}>{title}</Button>
@@ -41,6 +42,10 @@ export function BackButtonMyCart() {
 export const OptionDropdown = ({ title, newTitle, onSelect, options, multiOption }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState({[newTitle[0]]: true});
+
+    useEffect(() => {
+        setSelectedOptions({[newTitle[0]]: true});
+    },[options]);
 
     const handleToggle = () => {
         setIsDropdownOpen(!isDropdownOpen);

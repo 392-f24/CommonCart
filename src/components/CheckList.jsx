@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, ListGroup, Form, Modal } from 'react-bootstrap';
 import { BackButton, OrangeButton } from "../Components/Buttons";
-import { useAuthState, useDbData, useDbUpdate } from "../utilities/firebase"; // Import Firebase hooks
+import { useAuthState, useDbData, useDbUpdate } from "../utilities/firebase";
+import './CheckList.css';
 
 function CheckList() {
   const location = useLocation();
@@ -12,6 +13,9 @@ function CheckList() {
 
   const [cartData] = useDbData('/Cart');
   const [updateData] = useDbUpdate('/Cart');
+  const [userData] = useDbData(`/users/${user?.uid}`);
+  const [updateUserSummaries] = useDbUpdate(`/users`);
+  const [updateSummaries] = useDbUpdate('/Summary');
 
   const [items, setItems] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -20,12 +24,14 @@ function CheckList() {
     // Filter carts by cartKeysOnly and destination
     const filteredCarts = Object.entries(cartData)
       .filter(([cartId]) => cartKeysOnly.includes(cartId))
-      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]));
+      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]) ||
+        cartData.shoppingStores.includes('Any Store'));
+
 
     // Extract items with status false from filtered carts
     const initialItems = filteredCarts.flatMap(([cartId, cartData]) =>
       Object.entries(cartData.items)
-        .filter(([, itemData]) => itemData.status === false && itemData.store === destOnly[0])
+        .filter(([, itemData]) => itemData.status === false && (itemData.store === destOnly[0] || itemData.store === 'Any Store'))
         .map(([id, itemData]) => ({
           id,
           cartId,
@@ -38,7 +44,6 @@ function CheckList() {
     );
 
     setItems(initialItems);
-    // console.log("items", items);
   }
 
 
@@ -53,27 +58,96 @@ function CheckList() {
 
   // Update data on "Finish Shopping"
   const finishShopping = () => {
-    const updates = {};
+    const itemUpdates = {};
+    const storeUpdates = [];
+    const completedItems = items.filter(item => item.status === true);
+
+    // Update summaries
+    const newSummaryId = `${Date.now()}`;
+
+    const summaryData = {
+      completedBy: user?.uid,
+      completedAt: new Date().toISOString(),
+      store: destOnly[0],
+      cartIds: cartKeysOnly,
+      items: completedItems.map(({ itemName, userAdded, userFulfilled }) => ({
+        itemName,
+        userAdded,
+        userFulfilled: user?.uid
+      }))
+    };
+
+    updateSummaries({ [newSummaryId]: summaryData });
+
+
+    /////////////////////////////////////////////////////////////////
+    /// Will switch to this implementation once we add users to carts
+    /////////////////////////////////////////////////////////////////
+
+    // // Retrieve the users who belong to each cart in cartKeysOnly
+    // const userIdsToUpdate = new Set();
+
+    // cartKeysOnly.forEach(cartId => {
+    //   const cart = cartData[cartId];
+    //   if (cart && cart.users) {
+    //     cart.users.forEach(userId => userIdsToUpdate.add(userId));
+    //   }
+    // });
+
+    // // Update each user's summaries with the new summary ID
+    // userIdsToUpdate.forEach(userId => {
+    //   const userSummaryPath = `/${userId}/summaries`;
+    //   const existingSummaries = userData?.summaries || [];
+    //   const updatedSummaries = [...existingSummaries, newSummaryId];
+
+    //   updateUserSummaries({
+    //     [userSummaryPath]: updatedSummaries
+    //   });
+    // });
+
+    // Update user's summaries list
+    const currentSummaries = userData?.summaries || [];
+    const updatedSummaries = [...currentSummaries, newSummaryId];
+
+    const userSummaryPath = `/${user.uid}/summaries`;
+    updateUserSummaries({
+      [userSummaryPath]: updatedSummaries
+    });
+
+    // Update cart items and manage store updates
     items.forEach((item) => {
+      const itemPath = `/${item.cartId}/items/${item.id}`;
       if (item.status === true) {
-        const itemPath = `/${item.cartId}/items/${item.id}`;
-        updates[itemPath] = {
+        itemUpdates[itemPath] = {
           itemName: item.itemName,
           status: true,
           store: item.store,
           userAdded: item.userAdded,
           userFulfilled: user?.uid || ""
         };
+      } else {
+        storeUpdates.push(item.store);
       }
     });
 
-    updateData(updates);
+    // Remove store from shoppingStores if all items are shopped
+    if (!storeUpdates.includes(destOnly[0]) && !storeUpdates.includes('Any Store')) {
+      cartKeysOnly.forEach((key) => {
+        const storesPath = `/${key}/shoppingStores`;
+        const newStores = cartData[key].shoppingStores.filter(
+          store => store !== destOnly[0] && store !== 'Any Store'
+        );
 
-    // Show popup and redirect
+        updateData({ [storesPath]: newStores.length ? newStores : [] });
+      });
+    }
+
+    updateData(itemUpdates);
     setShowPopup(true);
+
     setTimeout(() => {
       setShowPopup(false);
-      navigate('/');
+      navigate('/summaries');
     }, 1300);
   };
 
@@ -82,6 +156,8 @@ function CheckList() {
   return (
     <div className="d-flex flex-column align-items-center justify-content-center min-vh-100" style={{ padding: '2.0rem' }}>
       <BackButton />
+
+      <h1> {destOnly} </h1>
 
       <Card
         style={{
