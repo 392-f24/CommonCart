@@ -12,7 +12,7 @@ import SummariesPage from './Pages/SummariesPage';
 import GoShoppingPage from './Pages/GoShoppingPage';
 import ShoppingListPage from './Pages/ShoppingListPage';
 import CheckList from './components/CheckList';
-
+import ConfirmUserPage from './Pages/ConfirmUserPage';
 
 const App = () => {
   const [user, loading, error] = useAuthState(); 
@@ -40,6 +40,7 @@ const App = () => {
                 <Route path="/go-shopping" element={<GoShoppingPage />}/>
                 <Route path="/cart/:title" element={<ShoppingListPage />} />
                 <Route path="/go-shopping/checklist" element={<CheckList />} />
+                <Route path="/confirm" element={<ConfirmUserPage />} />
                 {/* <Route path="/profile" element={<ProfilePage />} /> */}
 
               </Routes>

@@ -2,45 +2,62 @@ import React, { useState } from 'react';
 import './CreateCartModal.css';
 import SearchResultItem from './SearchResultItem';
 import AddedItem from './AddedItem';
-import { useDbUpdate, useDbData } from '../../utilities/firebase';
+import { useDbUpdate, useDbData ,useAuthState } from '../../utilities/firebase';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
-// const mockStoreDatabase = [
-//   'Walmart', 'Wholefood', 'Sams', "Trader Joes's", 'Jewel Osco', 'Target' 
-// ];
-
-const CreateCartModal = ({ show, onClose, onAddCart }) => {
+const CreateCartModal = ({ show, onClose}) => {
   const [cartName, setCartName] = useState('');
   const [userSearch, setUserSearch] = useState('');
   const [matchingUsers, setMatchingUsers] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
-  const [storeSearch, setStoreSearch] = useState('');
-  const [matchingStores, setMatchingStores] = useState([]);
-  const [addedStores, setAddedStores] = useState([]);
+  
+  const [description, setDescription] = useState('');
+
 
   const [updateData] = useDbUpdate('/Cart');
   const [usersData] = useDbData('/users');
+  //current user
+  const [currentUser] = useAuthState();
 
-  const handleCreateClick = () => {
-    if (cartName) {
-      const newCart = {
-        title: cartName,
-        paymentType: 'One-time Payment',
-        paymentDue: '',
-        shoppingStores: [],
+  const handleCreateClick = async () => {
+    if (!cartName) return;
+  
+    const newCart = {
+      title: cartName,
+      description,
+      users: [
+        { id: currentUser.uid, displayName: currentUser.displayName }
+      ],
+      items: {},
+      imageUrls: ""
+    };
+  
+    const cartId = Date.now().toString();
+  
+    // Save new cart to Firebase Realtime Database
+    await updateData({ [cartId]: newCart });
+  
+    // Call Firebase Function to send invitations
+    const functions = getFunctions();
+    const sendInvitations = httpsCallable(functions, "sendCartInvitations");
+    console.log(addedUsers);
+    try {
+      await sendInvitations({
+        cartId,
         users: addedUsers,
-        items: {},
-        imageUrls: ""
-      };
-
-      // Save new cart to Firebase
-      updateData({ [Date.now()]: newCart });
-
-      // Reset states and close modal
-      onClose();
-      setCartName('');
-      setUserSearch('');
-      setAddedUsers([]);
+        title: cartName,
+      });
+      console.log("Invitations sent successfully.");
+    } catch (error) {
+      console.error("Error sending invitations:", error);
     }
+  
+    // Reset states and close modal
+    onClose();
+    setCartName("");
+    setUserSearch("");
+    setAddedUsers([]);
+    setDescription("");
   };
 
   if (!show) return null;
@@ -64,7 +81,7 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
       )
       .slice(0, 10);
 
-    setMatchingUsers(filteredUsers.map(([id, user]) => ({ id, displayName: user.displayName })));
+    setMatchingUsers(filteredUsers.map(([id, user]) => ({ id, displayName: user.displayName ,email: user.email})));
   };
 
   const handleAddUser = (user) => {
@@ -78,28 +95,6 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
     setAddedUsers(addedUsers.filter((user) => user.id !== id));
   };
 
-  // const handleStoreSearch = () => {
-  //   if (storeSearch.trim() === '') {
-  //     setMatchingStores([]);
-  //     return;
-  //   }
-  //   const filteredStores = mockStoreDatabase
-  //     .filter((store) => store.toLowerCase().includes(storeSearch.toLowerCase()))
-  //     .slice(0, 5);
-  //   setMatchingStores(filteredStores);
-  // };
-
-  // const handleAddStore = (store) => {
-  //   if (!addedStores.includes(store)) {
-  //     setAddedStores([...addedStores, store]);
-  //   }
-  //   setMatchingStores([]);
-  // };
-
-  // const handleDeleteAddedStore = (store) => {
-  //   setAddedStores(addedStores.filter((s) => s !== store));
-  // };
-
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
@@ -108,10 +103,18 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
   
         <input
           type="text"
-          placeholder="cart name"
+          placeholder="Cart Name"
           className="cart-name-input"
           value={cartName}
           onChange={(e) => setCartName(e.target.value)}
+        />
+
+        {/* Description Input */}
+        <textarea
+          placeholder="Description"
+          className="cart-description-input"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
 
         {/* Search for User Input */}
@@ -141,45 +144,14 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
           )}
         </div>
 
-        {/* Display Added Users */}
+        {/* Added Users Section */}
         <div className="added-users-container">
           {addedUsers.map((user) => (
             <AddedItem key={user.id} name={user.displayName} onDelete={() => handleDeleteAddedUser(user.id)} />
           ))}
         </div>
 
-        {/* Search for Shopping Store Input */}
-        {/* <div className="search-container">
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search shopping store"
-              className="search-input"
-              value={storeSearch}
-              onChange={(e) => setStoreSearch(e.target.value)}
-            />
-            <button className="search-button" onClick={handleStoreSearch}>
-              🔍
-            </button>
-          </div>
-
-          {matchingStores.length > 0 && (
-            <ul className="store-dropdown">
-              {matchingStores.map((store, index) => (
-                <li key={index} className="store-dropdown-item">
-                  <SearchResultItem label={store} onAdd={() => handleAddStore(store)} />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="added-stores-container">
-          {addedStores.map((store, index) => (
-            <AddedItem key={index} name={store} onDelete={() => handleDeleteAddedStore(store)} />
-          ))}
-        </div> */}
-
+        {/* Create Button */}
         <div className="button-container">
           <button className="create-button" onClick={handleCreateClick}>
             Create
@@ -189,5 +161,4 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
     </div>
   );
 };
-
 export default CreateCartModal;
