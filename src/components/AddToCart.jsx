@@ -11,7 +11,7 @@ const AddToCartModal = ({ closeModal, cartId, cartTitle }) => {
     const [user] = useAuthState();
     const [storeName, setStoreName] = useState('');
     const [item, setItem] = useState('');
-    const [status] = useState(false);  // Set status to false initially
+    const [status] = useState(false);  
     const [userFulfilled, setUserFulfilled] = useState('');
     const [updateData, result] = useDbUpdate(`/Cart/${cartId}/items`);
 
