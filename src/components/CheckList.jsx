@@ -79,39 +79,27 @@ function CheckList() {
 
     updateSummaries({ [newSummaryId]: summaryData });
 
+    // Retrieve the users who belong to each cart in cartKeysOnly
+    const userIdsToUpdate = new Set();
 
-    /////////////////////////////////////////////////////////////////
-    /// Will switch to this implementation once we add users to carts
-    /////////////////////////////////////////////////////////////////
+    cartKeysOnly.forEach(cartId => {
+      const cart = cartData[cartId];
+      if (cart && cart.users) {
+        cart.users.forEach(user => userIdsToUpdate.add(user.id));
+      }
+    });
 
-    // // Retrieve the users who belong to each cart in cartKeysOnly
-    // const userIdsToUpdate = new Set();
+    console.log('userIdsToUpdate:', userIdsToUpdate);
 
-    // cartKeysOnly.forEach(cartId => {
-    //   const cart = cartData[cartId];
-    //   if (cart && cart.users) {
-    //     cart.users.forEach(userId => userIdsToUpdate.add(userId));
-    //   }
-    // });
+    // Update each user's summaries with the new summary ID
+    userIdsToUpdate.forEach(userId => {
+      const userSummaryPath = `/${userId}/summaries`;
+      const existingSummaries = userData?.summaries || [];
+      const updatedSummaries = [...existingSummaries, newSummaryId];
 
-    // // Update each user's summaries with the new summary ID
-    // userIdsToUpdate.forEach(userId => {
-    //   const userSummaryPath = `/${userId}/summaries`;
-    //   const existingSummaries = userData?.summaries || [];
-    //   const updatedSummaries = [...existingSummaries, newSummaryId];
-
-    //   updateUserSummaries({
-    //     [userSummaryPath]: updatedSummaries
-    //   });
-    // });
-
-    // Update user's summaries list
-    const currentSummaries = userData?.summaries || [];
-    const updatedSummaries = [...currentSummaries, newSummaryId];
-
-    const userSummaryPath = `/${user.uid}/summaries`;
-    updateUserSummaries({
-      [userSummaryPath]: updatedSummaries
+      updateUserSummaries({
+        [userSummaryPath]: updatedSummaries
+      });
     });
 
     // Update cart items and manage store updates
