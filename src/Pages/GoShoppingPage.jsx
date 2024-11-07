@@ -36,14 +36,13 @@ const GoShoppingPage = () => {
             const userName = currentUser.displayName; 
 
             const filteredKeys = [];
-            const filteredCarts = allCarts.filter((cart, idx) => 
-              {
-                filteredKeys.push(allKeys[idx]);
-                return(
-                    cart.users && cart.users.some(user => user.id === userId || user.displayName === userName)
-                )
-              }
-            )
+            const filteredCarts = [];
+            allCarts.forEach((cart, idx) => {
+                if( cart.users && cart.users.some(user => user.id === userId || user.displayName === userName) ){
+                    filteredKeys.push(allKeys[idx]);
+                    filteredCarts.push(cart);
+                }
+            });
 
             // Create new objects for `keyCart`, `cartDestinationMap`, `cartOptions`, and `destinationOptions`
             const newKeyCart = {};
@@ -52,9 +51,10 @@ const GoShoppingPage = () => {
             const newDestinationOptions = [];
 
             filteredCarts.forEach((c, index) => {
-                // console.log(c);
                 newKeyCart[c.title] = filteredKeys[index];
-                newCartDestinationMap[c.title] = c.shoppingStores;
+                if (c.shoppingStores) {
+                    newCartDestinationMap[c.title] = c.shoppingStores;
+                }
                 newCartOptions.push(c.title);
 
                 {c.shoppingStores && c.shoppingStores.forEach((store) => {
@@ -75,6 +75,8 @@ const GoShoppingPage = () => {
         const cartsOnly = cart.slice(1);
         const destOnly = destination.slice(1);
         const cartKeysOnly = cartsOnly.map((c) => keyCart[c]);
+
+        console.log(`cart keys only ${cartKeysOnly} destination ${destOnly}`);
         navigate('/go-shopping/checklist', { state: { destOnly, cartKeysOnly } } );
         setDestination(["Select Destination"]);
         setCart(["Select Cart"])
@@ -86,7 +88,9 @@ const GoShoppingPage = () => {
         setDestination(destination);
         // create a new list of carts, that include the selected destination
         const newCart = [];
-        Object.keys(cartDestinationMap).forEach((cartOption) => {
+        console.log((cartDestinationMap));
+        Object.keys(cartDestinationMap).map((cartOption) => {
+            console.log(cartOption);
             if (cartDestinationMap[cartOption].includes(destination[1]) || cartDestinationMap[cartOption].includes('Any Store')) {
                 newCart.push(cartOption);
             } else if (cart.includes(cartOption)) {
