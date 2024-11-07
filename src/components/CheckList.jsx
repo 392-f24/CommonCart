@@ -24,8 +24,12 @@ function CheckList() {
     // Filter carts by cartKeysOnly and destination
     const filteredCarts = Object.entries(cartData)
       .filter(([cartId]) => cartKeysOnly.includes(cartId))
-      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]) ||
-        cartData.shoppingStores.includes('Any Store'));
+      .filter(([, cartData]) => {
+        if (cartData.shoppingStores){
+          return(
+            cartData.shoppingStores.includes(destOnly[0]) || cartData.shoppingStores.includes('Any Store')
+          )
+        }});
 
 
     // Extract items with status false from filtered carts
