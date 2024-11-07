@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {getDatabase,  onValue, ref, update, get,} from "firebase/database"
+import {getDatabase,  onValue, ref, update, get, remove} from "firebase/database"
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut as firebaseSignOut } from 'firebase/auth';
 import { useCallback, useState, useEffect } from "react";
 
@@ -84,4 +84,26 @@ export const useDbUpdate = (path) => {
     }, [path]);
 
     return [updateData, result];
+};
+
+
+export const useDbRemove = () => {
+    const [result, setResult] = useState(null);
+
+    const removeData = useCallback(async (path) => {
+        try {
+            const dbRef = ref(database, path);
+            const snapshot = await get(dbRef);
+            if (snapshot.exists()) {
+                await remove(dbRef);
+                setResult({ message: `Removed successfully`, error: false });
+            } else {
+                setResult({ message: `Error: No data found at path: ${path}`, error: true });
+            }
+        } catch (error) {
+            setResult({ message: error.message, error: true });
+        }
+    }, []);
+
+    return [removeData, result];
 };

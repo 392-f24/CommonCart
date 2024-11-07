@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDbData } from '../utilities/firebase.js';
+import { useDbData, useDbRemove } from '../utilities/firebase.js';
 import { BackButtonMyCart } from '../Components/Buttons.jsx';
 import './ShoppingListPage.css';
 import { useParams } from 'react-router-dom';
@@ -9,6 +9,7 @@ import AddToCartModal from '../components/AddToCart';
 const ShoppingListPage = () => {
   const [carts, cartsError] = useDbData('/Cart');
   const [users, usersError] = useDbData('/users');
+  const [removeItem, removeResult] = useDbRemove();
   const [items, setItems] = useState([]);
   const [userMap, setUserMap] = useState({});
   const [user] = useAuthState();
@@ -44,12 +45,28 @@ const ShoppingListPage = () => {
       if (matchingCart) {
         const [id, cartData] = matchingCart;
         setCartId(id);
-        setItems(cartData.items ? Object.values(cartData.items) : []);
+        // Ensure each item has an ID mapped for direct access
+        setItems(cartData.items ? Object.entries(cartData.items).map(([key, value]) => ({ id: key, ...value })) : []);
       } else {
         setItems([]);
       }
     }
   }, [carts, title]);
+
+ 
+
+  const handleDelete = (itemId) => {
+    if (!cartId || !itemId) return;
+
+    const item = items.find((item) => item.id === itemId);
+    if (item && item.userAdded === (user ? user.uid : '')) {
+      // Remove item from both Cart and Summary paths
+      removeItem(`/Cart/${cartId}/items/${itemId}`);
+      // removeItem(`/Summary/${itemId}`);
+    } else {
+      console.error("You don't have permission to delete this item.");
+    }
+  };
 
   if (cartsError) {
     return <div>Error fetching carts: {cartsError.message}</div>;
@@ -65,6 +82,7 @@ const ShoppingListPage = () => {
     <div className='shoppinglist-page'>
       <BackButtonMyCart />
       <h1>Shopping List: {title}</h1>
+      <button>Sort By</button>
       <div className="shoppinglist-content-wrapper">
         <div className="shoppinglist-card">
           {items.length === 0 ? (
@@ -77,7 +95,6 @@ const ShoppingListPage = () => {
                 const initials = getInitials(addedByName);
                 const fulfilledByName = item.userFulfilled ? userMap[item.userFulfilled] : null;
 
-                // Assign color if not already assigned
                 if (!colorMap[addedById]) {
                   colorMap[addedById] = addedById === currentUserId ? pastelGreen : randomPastelColor();
                 }
@@ -98,6 +115,12 @@ const ShoppingListPage = () => {
                         <p className="fulfilled-text" style={{ fontStyle: 'italic', fontSize: '0.9rem' }}>
                           Fulfilled by: {fulfilledByName}
                         </p>
+                      )}
+                      
+                      {addedById === (user ? user.uid : '') && (
+                        <button onClick={() => handleDelete(item.id)} className="delete-button">
+                          Delete
+                        </button>
                       )}
                     </div>
                   </li>
@@ -122,7 +145,6 @@ const ShoppingListPage = () => {
   );
 };
 
-// Helper function to generate random pastel colors
 const randomPastelColor = () => {
   const r = Math.floor(Math.random() * 128 + 127);
   const g = Math.floor(Math.random() * 128 + 127);
