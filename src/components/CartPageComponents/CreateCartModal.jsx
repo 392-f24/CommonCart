@@ -2,68 +2,68 @@ import React, { useState } from 'react';
 import './CreateCartModal.css';
 import SearchResultItem from './SearchResultItem';
 import AddedItem from './AddedItem';
-import { useDbUpdate, useDbData ,useAuthState } from '../../utilities/firebase';
+import { useDbUpdate, useDbData, useAuthState } from '../../utilities/firebase';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
-const CreateCartModal = ({ show, onClose}) => {
+const CreateCartModal = ({ show, onClose }) => {
   const [cartName, setCartName] = useState('');
   const [userSearch, setUserSearch] = useState('');
   const [matchingUsers, setMatchingUsers] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
-  
   const [description, setDescription] = useState('');
-
+  const [clickStartedOutside, setClickStartedOutside] = useState(false);
 
   const [updateData] = useDbUpdate('/Cart');
   const [usersData] = useDbData('/users');
-  //current user
   const [currentUser] = useAuthState();
 
   const handleCreateClick = async () => {
     if (!cartName) return;
-  
+
     const newCart = {
       title: cartName,
       description,
-      users: [
-        { id: currentUser.uid, displayName: currentUser.displayName }
-      ],
+      users: [{ id: currentUser.uid, displayName: currentUser.displayName }],
       items: {},
-      imageUrls: ""
+      imageUrls: '',
     };
-  
+
     const cartId = Date.now().toString();
-  
-    // Save new cart to Firebase Realtime Database
-    await updateData({ [cartId]: newCart });
-  
-    // Call Firebase Function to send invitations
-    const functions = getFunctions();
-    const sendInvitations = httpsCallable(functions, "sendCartInvitations");
-    console.log(addedUsers);
-    try {
-      await sendInvitations({
-        cartId,
-        users: addedUsers,
-        title: cartName,
-      });
-      console.log("Invitations sent successfully.");
-    } catch (error) {
-      console.error("Error sending invitations:", error);
+    
+
+    if (addedUsers.length > 0) {
+      const functions = getFunctions();
+      const sendInvitations = httpsCallable(functions, 'sendCartInvitations');
+      try {
+        await sendInvitations({
+          cartId,
+          users: addedUsers,
+          title: cartName,
+        });
+      } catch (error) {
+        console.error('Error sending invitations:', error);
+      }
     }
-  
-    // Reset states and close modal
+    await updateData({ [cartId]: newCart });
     onClose();
-    setCartName("");
-    setUserSearch("");
+    setCartName('');
+    setUserSearch('');
     setAddedUsers([]);
-    setDescription("");
+    setDescription('');
   };
 
   if (!show) return null;
 
-  const handleOverlayClick = (e) => {
-    if (e.target.className === 'modal-overlay') {
+  const handleMouseDown = (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+      setClickStartedOutside(true);
+    } else {
+      setClickStartedOutside(false);
+    }
+  };
+
+  const handleMouseUp = (e) => {
+    if (clickStartedOutside && e.target.classList.contains('modal-overlay')) {
       onClose();
     }
   };
@@ -74,14 +74,12 @@ const CreateCartModal = ({ show, onClose}) => {
       return;
     }
 
-    // Filter users based on displayName using the `userSearch` term
+    const currentUserId = currentUser ? currentUser.uid : null;
     const filteredUsers = Object.entries(usersData || {})
-      .filter(([, user]) =>
-        user.displayName.toLowerCase().includes(userSearch.toLowerCase())
-      )
+      .filter(([id, user]) => user.displayName.toLowerCase().includes(userSearch.toLowerCase()) && id !== currentUserId)
       .slice(0, 10);
 
-    setMatchingUsers(filteredUsers.map(([id, user]) => ({ id, displayName: user.displayName ,email: user.email})));
+    setMatchingUsers(filteredUsers.map(([id, user]) => ({ id, displayName: user.displayName, email: user.email })));
   };
 
   const handleAddUser = (user) => {
@@ -96,28 +94,35 @@ const CreateCartModal = ({ show, onClose}) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
+    <div
+      className="modal-overlay"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+    >
       <div className="modal-content">
         <button className="close-button" onClick={onClose}>×</button>
         <h2>Create Cart</h2>
-  
+
         <input
           type="text"
           placeholder="Cart Name"
           className="cart-name-input"
           value={cartName}
           onChange={(e) => setCartName(e.target.value)}
+          maxLength={20}
         />
 
-        {/* Description Input */}
         <textarea
           placeholder="Description"
           className="cart-description-input"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          maxLength={60}
         />
+        <p className="char-warning" style={{ color: description.length === 60 ? 'red' : '#555' }}>
+          {description.length === 60 ? 'Maximum length reached' : `${60 - description.length} characters remaining`}
+        </p>
 
-        {/* Search for User Input */}
         <div className="search-container">
           <div className="search-bar">
             <input
@@ -132,7 +137,6 @@ const CreateCartModal = ({ show, onClose}) => {
             </button>
           </div>
 
-          {/* Matching Users Dropdown */}
           {matchingUsers.length > 0 && (
             <ul className="user-dropdown">
               {matchingUsers.map((user) => (
@@ -144,21 +148,20 @@ const CreateCartModal = ({ show, onClose}) => {
           )}
         </div>
 
-        {/* Added Users Section */}
         <div className="added-users-container">
           {addedUsers.map((user) => (
             <AddedItem key={user.id} name={user.displayName} onDelete={() => handleDeleteAddedUser(user.id)} />
           ))}
         </div>
 
-        {/* Create Button */}
         <div className="button-container">
           <button className="create-button" onClick={handleCreateClick}>
-            Create
+            Create Cart and Send Invitation
           </button>
         </div>
       </div>
     </div>
   );
 };
+
 export default CreateCartModal;
