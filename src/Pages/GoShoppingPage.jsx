@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import { OptionDropdown, OrangeButton } from "../Components/Buttons"
 import './GoShoppingPage.css'
-import { useDbData } from '../utilities/firebase';
+import { useDbData, useAuthState } from '../utilities/firebase';
 
 
 const GoShoppingPage = () => {
+  const [currentUser]= useAuthState();
+
   const [keyCart, setKeyCart] = useState({});
   const [data, error] = useDbData('/Cart');
   // map of cart names and the stores under that cart 
@@ -26,9 +28,22 @@ const GoShoppingPage = () => {
       return;
     }
 
-        if (data && typeof data === 'object') {
+    if (data && typeof data === 'object' && currentUser) {
             const allCarts = Object.values(data);
             const allKeys = Object.keys(data);
+
+            const userId = currentUser.uid; 
+            const userName = currentUser.displayName; 
+
+            const filteredKeys = [];
+            const filteredCarts = allCarts.filter((cart, idx) => 
+              {
+                filteredKeys.push(allKeys[idx]);
+                return(
+                    cart.users && cart.users.some(user => user.id === userId || user.displayName === userName)
+                )
+              }
+            )
 
             // Create new objects for `keyCart`, `cartDestinationMap`, `cartOptions`, and `destinationOptions`
             const newKeyCart = {};
@@ -36,8 +51,9 @@ const GoShoppingPage = () => {
             const newCartOptions = [];
             const newDestinationOptions = [];
 
-            allCarts.forEach((c, index) => {
-                newKeyCart[c.title] = allKeys[index];
+            filteredCarts.forEach((c, index) => {
+                // console.log(c);
+                newKeyCart[c.title] = filteredKeys[index];
                 newCartDestinationMap[c.title] = c.shoppingStores;
                 newCartOptions.push(c.title);
 
