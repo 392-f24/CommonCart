@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDbData, useDbRemove } from '../utilities/firebase.js';
+import { useDbData, useDbRemove, useDbUpdate } from '../utilities/firebase.js';
 import { BackButtonMyCart } from '../Components/Buttons.jsx';
 import './ShoppingListPage.css';
 import { useParams } from 'react-router-dom';
@@ -10,6 +10,8 @@ const ShoppingListPage = () => {
   const [carts, cartsError] = useDbData('/Cart');
   const [users, usersError] = useDbData('/users');
   const [removeItem, removeResult] = useDbRemove();
+  
+
   const [items, setItems] = useState([]);
   const [userMap, setUserMap] = useState({});
   const [user] = useAuthState();
@@ -54,19 +56,51 @@ const ShoppingListPage = () => {
   }, [carts, title]);
 
  
-
-  const handleDelete = (itemId) => {
+  const [updateData] = useDbUpdate(`/Cart/${cartId}/shoppingStores`);
+  const handleDelete = async (itemId) => {
     if (!cartId || !itemId) return;
-
+  
     const item = items.find((item) => item.id === itemId);
-    if (item && item.userAdded === (user ? user.uid : '')) {
-      // Remove item from both Cart and Summary paths
-      removeItem(`/Cart/${cartId}/items/${itemId}`);
-      // removeItem(`/Summary/${itemId}`);
+    if (item && item.userAdded === currentUserId) {
+      const itemStore = item.store;
+  
+      try {
+        await removeItem(`/Cart/${cartId}/items/${itemId}`);
+  
+        const updatedCartSnapshot = await useDbData(`/Cart/${cartId}`);
+        const updatedCartData = updatedCartSnapshot || {};
+        const remainingItems = updatedCartData.items
+          ? Object.values(updatedCartData.items)
+          : [];
+  
+        const remainingItemsWithStore = remainingItems.filter(
+          (otherItem) => otherItem.store === itemStore
+        );
+  
+        if (remainingItemsWithStore.length === 0) {
+          const updatedStores = updatedCartData.shoppingStores
+            ? updatedCartData.shoppingStores.filter((store) => store !== itemStore)
+            : [];
+  
+          await updateData(
+            `/Cart/${cartId}`,
+            updatedStores.length > 0
+              ? { shoppingStores: updatedStores }
+              : { shoppingStores: ['Any Store'] }
+          );
+        }
+  
+        setItems(remainingItems);
+      } catch (error) {
+        console.error("Error deleting item or updating stores:", error);
+      }
     } else {
       console.error("You don't have permission to delete this item.");
     }
   };
+  
+  
+  
 
   if (cartsError) {
     return <div>Error fetching carts: {cartsError.message}</div>;
