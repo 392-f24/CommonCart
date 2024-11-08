@@ -275,22 +275,22 @@ const ShoppingListPage = () => {
             )
           )}
         </div>
-// <<<<<<< Ziye
+{/* // <<<<<<< Ziye */}
 
         {/* Add Item Button */}
-        <button
+        {/* <button
           className="add-item-button create-cart-button"
           onClick={() => setAddCartModal(true)}
         >
           Add Item to Cart
-        </button>
-// =======
-//         <div style={{ display: "flex", justifyContent: "space-between" }}>
-//           <OrangeButton title={"Add Item to Cart"} onClick={() => setAddCartModal(true)}/>
-//           <OrangeButton title={"Delete Cart"} onClick={() => setDeleteCartModal(true)}/>
-//         </div>
+        </button> */}
+        {/* <OrangeButton title={"Delete Cart"} onClick={() => setDeleteCartModal(true)}/> */}
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <OrangeButton title={"Add Item to Cart"} onClick={() => setAddCartModal(true)}/>
+          <OrangeButton title={"Delete Cart"} onClick={() => setDeleteCartModal(true)}/>
+        </div>
 
-// >>>>>>> main
+
       </div>
 
       {/* Modal for adding an item */}
@@ -302,8 +302,8 @@ const ShoppingListPage = () => {
         />
       )}
 
-// <<<<<<< Ziye
-// =======
+{/* // <<<<<<< Ziye
+// ======= */}
       {showDeleteCartModal && (
         <DeleteCartModal
           closeModal={() => setDeleteCartModal(false)}
@@ -311,7 +311,7 @@ const ShoppingListPage = () => {
           cartTitle={title}
         />
       )}
-// >>>>>>> main
+{/* // >>>>>>> main */}
     </div>
   );
 };
