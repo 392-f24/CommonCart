@@ -71,6 +71,16 @@ const ShoppingListPage = () => {
   const [updateData] = useDbUpdate(`/Cart/${cartId}`);
 
   const handleDelete = async (itemId) => {
+    const storeUpdates = [];
+    Object.entries(items).forEach(([key, value]) => {
+      if (value.id !== itemId){
+        storeUpdates.push(value.store);
+      }
+    });
+    const finalStores = [...new Set(storeUpdates)];
+
+    await updateData({shoppingStores: finalStores});
+
     if (!cartId || !itemId) return;
     const item = items.find((item) => item.id === itemId);
   
