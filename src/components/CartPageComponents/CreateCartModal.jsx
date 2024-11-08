@@ -2,51 +2,68 @@ import React, { useState } from 'react';
 import './CreateCartModal.css';
 import SearchResultItem from './SearchResultItem';
 import AddedItem from './AddedItem';
-import { useDbUpdate, useDbData } from '../../utilities/firebase';
+import { useDbUpdate, useDbData, useAuthState } from '../../utilities/firebase';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
-// const mockStoreDatabase = [
-//   'Walmart', 'Wholefood', 'Sams', "Trader Joes's", 'Jewel Osco', 'Target' 
-// ];
-
-const CreateCartModal = ({ show, onClose, onAddCart }) => {
+const CreateCartModal = ({ show, onClose }) => {
   const [cartName, setCartName] = useState('');
   const [userSearch, setUserSearch] = useState('');
   const [matchingUsers, setMatchingUsers] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
-  const [storeSearch, setStoreSearch] = useState('');
-  const [matchingStores, setMatchingStores] = useState([]);
-  const [addedStores, setAddedStores] = useState([]);
+  const [description, setDescription] = useState('');
+  const [clickStartedOutside, setClickStartedOutside] = useState(false);
 
   const [updateData] = useDbUpdate('/Cart');
   const [usersData] = useDbData('/users');
+  const [currentUser] = useAuthState();
 
-  const handleCreateClick = () => {
-    if (cartName) {
-      const newCart = {
-        title: cartName,
-        paymentType: 'One-time Payment',
-        paymentDue: '',
-        shoppingStores: [],
-        users: addedUsers,
-        items: {},
-        imageUrls: ""
-      };
+  const handleCreateClick = async () => {
+    if (!cartName) return;
 
-      // Save new cart to Firebase
-      updateData({ [Date.now()]: newCart });
+    const newCart = {
+      title: cartName,
+      description,
+      users: [{ id: currentUser.uid, displayName: currentUser.displayName }],
+      items: {},
+      imageUrls: '',
+    };
 
-      // Reset states and close modal
-      onClose();
-      setCartName('');
-      setUserSearch('');
-      setAddedUsers([]);
+    const cartId = Date.now().toString();
+    
+
+    if (addedUsers.length > 0) {
+      const functions = getFunctions();
+      const sendInvitations = httpsCallable(functions, 'sendCartInvitations');
+      try {
+        await sendInvitations({
+          cartId,
+          users: addedUsers,
+          title: cartName,
+        });
+      } catch (error) {
+        console.error('Error sending invitations:', error);
+      }
     }
+    await updateData({ [cartId]: newCart });
+    onClose();
+    setCartName('');
+    setUserSearch('');
+    setAddedUsers([]);
+    setDescription('');
   };
 
   if (!show) return null;
 
-  const handleOverlayClick = (e) => {
-    if (e.target.className === 'modal-overlay') {
+  const handleMouseDown = (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+      setClickStartedOutside(true);
+    } else {
+      setClickStartedOutside(false);
+    }
+  };
+
+  const handleMouseUp = (e) => {
+    if (clickStartedOutside && e.target.classList.contains('modal-overlay')) {
       onClose();
     }
   };
@@ -57,14 +74,12 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
       return;
     }
 
-    // Filter users based on displayName using the `userSearch` term
+    const currentUserId = currentUser ? currentUser.uid : null;
     const filteredUsers = Object.entries(usersData || {})
-      .filter(([, user]) =>
-        user.displayName.toLowerCase().includes(userSearch.toLowerCase())
-      )
+      .filter(([id, user]) => user.displayName.toLowerCase().includes(userSearch.toLowerCase()) && id !== currentUserId)
       .slice(0, 10);
 
-    setMatchingUsers(filteredUsers.map(([id, user]) => ({ id, displayName: user.displayName })));
+    setMatchingUsers(filteredUsers.map(([id, user]) => ({ id, displayName: user.displayName, email: user.email })));
   };
 
   const handleAddUser = (user) => {
@@ -78,43 +93,36 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
     setAddedUsers(addedUsers.filter((user) => user.id !== id));
   };
 
-  // const handleStoreSearch = () => {
-  //   if (storeSearch.trim() === '') {
-  //     setMatchingStores([]);
-  //     return;
-  //   }
-  //   const filteredStores = mockStoreDatabase
-  //     .filter((store) => store.toLowerCase().includes(storeSearch.toLowerCase()))
-  //     .slice(0, 5);
-  //   setMatchingStores(filteredStores);
-  // };
-
-  // const handleAddStore = (store) => {
-  //   if (!addedStores.includes(store)) {
-  //     setAddedStores([...addedStores, store]);
-  //   }
-  //   setMatchingStores([]);
-  // };
-
-  // const handleDeleteAddedStore = (store) => {
-  //   setAddedStores(addedStores.filter((s) => s !== store));
-  // };
-
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
+    <div
+      className="modal-overlay"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+    >
       <div className="modal-content">
         <button className="close-button" onClick={onClose}>×</button>
         <h2>Create Cart</h2>
-  
+
         <input
           type="text"
-          placeholder="cart name"
+          placeholder="Cart Name"
           className="cart-name-input"
           value={cartName}
           onChange={(e) => setCartName(e.target.value)}
+          maxLength={20}
         />
 
-        {/* Search for User Input */}
+        <textarea
+          placeholder="Description"
+          className="cart-description-input"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          maxLength={60}
+        />
+        <p className="char-warning" style={{ color: description.length === 60 ? 'red' : '#555' }}>
+          {description.length === 60 ? 'Maximum length reached' : `${60 - description.length} characters remaining`}
+        </p>
+
         <div className="search-container">
           <div className="search-bar">
             <input
@@ -129,7 +137,6 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
             </button>
           </div>
 
-          {/* Matching Users Dropdown */}
           {matchingUsers.length > 0 && (
             <ul className="user-dropdown">
               {matchingUsers.map((user) => (
@@ -141,48 +148,15 @@ const CreateCartModal = ({ show, onClose, onAddCart }) => {
           )}
         </div>
 
-        {/* Display Added Users */}
         <div className="added-users-container">
           {addedUsers.map((user) => (
             <AddedItem key={user.id} name={user.displayName} onDelete={() => handleDeleteAddedUser(user.id)} />
           ))}
         </div>
 
-        {/* Search for Shopping Store Input */}
-        {/* <div className="search-container">
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search shopping store"
-              className="search-input"
-              value={storeSearch}
-              onChange={(e) => setStoreSearch(e.target.value)}
-            />
-            <button className="search-button" onClick={handleStoreSearch}>
-              🔍
-            </button>
-          </div>
-
-          {matchingStores.length > 0 && (
-            <ul className="store-dropdown">
-              {matchingStores.map((store, index) => (
-                <li key={index} className="store-dropdown-item">
-                  <SearchResultItem label={store} onAdd={() => handleAddStore(store)} />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="added-stores-container">
-          {addedStores.map((store, index) => (
-            <AddedItem key={index} name={store} onDelete={() => handleDeleteAddedStore(store)} />
-          ))}
-        </div> */}
-
         <div className="button-container">
           <button className="create-button" onClick={handleCreateClick}>
-            Create
+            Create Cart and Send Invitation
           </button>
         </div>
       </div>
