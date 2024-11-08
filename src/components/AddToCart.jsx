@@ -10,6 +10,10 @@ const AddToCartModal = ({ closeModal, cartId, cartTitle }) => {
 
     const [user] = useAuthState();
     const [storeName, setStoreName] = useState('');
+    const [quantityItem, setQuantityItem] = useState('');
+    const [notes, setNotes] = useState('');
+
+
     const [item, setItem] = useState('');
     const [status] = useState(false);  
     const [userFulfilled, setUserFulfilled] = useState('');
@@ -23,46 +27,55 @@ const AddToCartModal = ({ closeModal, cartId, cartTitle }) => {
         }
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!cartId || !item || !user) {
             console.error("Please ensure all fields are filled in and a user is logged in.");
             return;
         }
-
+    
         const newItemId = `${Date.now()}`;
+        const normalizedStoreName = storeName.trim().toLowerCase() || 'any store';
         const newItem = {
             itemName: item,
-            status: status,
-            store: storeName ? storeName.toLowerCase() : 'Any Store',
+            status: false,
+            store: normalizedStoreName,
+            quantityItem: quantityItem,
+            notes: notes,
             userAdded: user.uid,
             userFulfilled: userFulfilled
         };
-
+    
         try {
-            if ( currCartData.shoppingStores ) {
-                const existingStores = currCartData.shoppingStores;
-                if ( !existingStores.includes(storeName) ) {
-                    updateCartData({ shoppingStores: [...currCartData.shoppingStores, storeName.toLowerCase()] });
+            // Check if `shoppingStores` exists and update it if needed
+            if (currCartData?.shoppingStores) {
+                const existingStores = currCartData.shoppingStores.map(store => store.toLowerCase());
+                
+                // Add store only if it's not already in the list (case insensitive)
+                if (!existingStores.includes(normalizedStoreName)) {
+                    await updateCartData({
+                        shoppingStores: [...currCartData.shoppingStores, normalizedStoreName]
+                    });
                 }
             } else {
-                storeName === '' ? 
-                updateCartData({ shoppingStores: ['Any Store'] }):
-                updateCartData({ shoppingStores: [storeName.toLowerCase()] });
+                // If `shoppingStores` doesn't exist, initialize it
+                await updateCartData({
+                    shoppingStores: [normalizedStoreName]
+                });
             }
-            
-        } catch (error){
-            console.error("Error saving data:", error);
+        } catch (error) {
+            console.error("Error updating shopping stores:", error);
         }
-
-        // Add the item to the selected cart's items
-        updateData({
-            [newItemId]: newItem,
+    
+        // Add the item to the cart's items list
+        await updateData({
+            [newItemId]: newItem
         });
-
+    
         closeModal(false);
         setStoreName('');
         setItem('');
     };
+    
       
 
   return (
@@ -86,6 +99,19 @@ const AddToCartModal = ({ closeModal, cartId, cartTitle }) => {
                             value={storeName}
                             onChange={(e) => setStoreName(e.target.value)}
                             placeholder="Enter a store name: default Any Store"
+                        />
+
+                        <input
+                            className="input fullWidth"
+                            value={quantityItem}
+                            onChange={(e) => setQuantityItem(e.target.value)}
+                            placeholder="Enter the quantity for this Item"
+                        />
+                        <input
+                            className="input fullWidth"
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            placeholder="Notes/details for this item"
                         />
                     </div>
             </div>

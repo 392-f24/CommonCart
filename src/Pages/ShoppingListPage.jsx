@@ -56,40 +56,47 @@ const ShoppingListPage = () => {
   }, [carts, title]);
 
  
-  const [updateData] = useDbUpdate(`/Cart/${cartId}/shoppingStores`);
+  const [updateData] = useDbUpdate(`/Cart/${cartId}`);
   const handleDelete = async (itemId) => {
     if (!cartId || !itemId) return;
   
     const item = items.find((item) => item.id === itemId);
     if (item && item.userAdded === currentUserId) {
-      const itemStore = item.store;
+      const itemStore = item.store.toLowerCase(); // Normalize store name
   
       try {
+        // Step 1: Delete the item from the cart
         await removeItem(`/Cart/${cartId}/items/${itemId}`);
   
-        const updatedCartSnapshot = await useDbData(`/Cart/${cartId}`);
-        const updatedCartData = updatedCartSnapshot || {};
+        // Step 2: Fetch updated cart data to check if the store still exists
+        const updatedCartSnapshot = await get(ref(database, `/Cart/${cartId}`));
+        const updatedCartData = updatedCartSnapshot.val() || {};
         const remainingItems = updatedCartData.items
           ? Object.values(updatedCartData.items)
           : [];
   
+        // Step 3: Check if any remaining items have the same store
         const remainingItemsWithStore = remainingItems.filter(
-          (otherItem) => otherItem.store === itemStore
+          (otherItem) => otherItem.store.toLowerCase() === itemStore
         );
   
+        // Step 4: If no items remain with that store, update `shoppingStores`
         if (remainingItemsWithStore.length === 0) {
           const updatedStores = updatedCartData.shoppingStores
-            ? updatedCartData.shoppingStores.filter((store) => store !== itemStore)
+            ? updatedCartData.shoppingStores.filter(
+                (store) => store.toLowerCase() !== itemStore
+              )
             : [];
   
+          // Use the `useDbUpdate` hook to update `shoppingStores`
           await updateData(
-            `/Cart/${cartId}`,
             updatedStores.length > 0
               ? { shoppingStores: updatedStores }
-              : { shoppingStores: ['Any Store'] }
+              : { shoppingStores: ['any store'] }
           );
         }
   
+        // Update the local state after deletion
         setItems(remainingItems);
       } catch (error) {
         console.error("Error deleting item or updating stores:", error);

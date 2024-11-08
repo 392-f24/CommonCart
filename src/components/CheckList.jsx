@@ -39,9 +39,12 @@ function CheckList() {
           status: itemData.status,
           store: itemData.store,
           userAdded: itemData.userAdded,
-          userFulfilled: itemData.userFulfilled
+          userFulfilled: itemData.userFulfilled,
+          quantityItem: itemData.quantityItem || '', // Include quantity
+          notes: itemData.notes || '' // Include notes
         }))
     );
+    
 
     setItems(initialItems);
   }
@@ -171,35 +174,39 @@ function CheckList() {
       >
         <Card.Body style={{ overflowY: 'auto', padding: '0', display: 'flex', flexDirection: 'column' }}>
           <Card.Title style={{ fontFamily: "Josefin Sans", fontSize: '1.5rem', fontWeight: 'bold' }}>{new Date().toLocaleDateString()} Shopping Trip</Card.Title>
-
-          <ListGroup variant="flush" className="mb-3" style={{ backgroundColor: 'transparent' }}>
+          <ListGroup variant="flush" className="mb-3">
             {items.map((item) => (
-              <ListGroup.Item
-                key={item.id}
-                className="d-flex align-items-center"
-                style={{
-                  textDecoration: item.status ? 'line-through' : 'none',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  fontFamily: "Josefin Sans",
-                  fontSize: '1.2rem',
-                  fontWeight: 'bold',
-                  color: item.status ? '#A0A0A0' : 'inherit'
-                }}
-              >
-                <div className="d-flex align-items-center" style={{ width: '100%' }}>
+              <ListGroup.Item key={item.id} className="list-group-item">
+                <div className="checkbox-container">
                   <Form.Check
                     type="checkbox"
                     checked={item.status}
                     onChange={() => handleCheck(item.id)}
-                    className="me-2"
                     style={{ cursor: 'pointer', accentColor: 'black' }}
                   />
-                  {item.itemName}
+                </div>
+                <div className="item-details">
+                  <span className="item-name" style={{ textDecoration: item.status ? 'line-through' : 'none', color: item.status ? '#A0A0A0' : 'inherit' }}>
+                    {item.itemName}
+                  </span>
+                  {item.quantityItem && (
+                    <div className="item-subtext">
+                      <strong>Quantity:</strong> {item.quantityItem}
+                    </div>
+                  )}
+                  {item.notes && (
+                    <div className="item-subtext">
+                      <strong>Notes:</strong> {item.notes}
+                    </div>
+                  )}
                 </div>
               </ListGroup.Item>
             ))}
           </ListGroup>
+
+
+
+
 
           <div className="mt-auto" style={{ padding: '1.0rem' }}>
             <OrangeButton title={"Finish Shopping"} onClick={finishShopping} />
