@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import { OptionDropdown, OrangeButton } from "../Components/Buttons"
 import './GoShoppingPage.css'
-import { useDbData } from '../utilities/firebase';
+import { useDbData, useAuthState } from '../utilities/firebase';
 
 
 const GoShoppingPage = () => {
+  const [currentUser]= useAuthState();
+
   const [keyCart, setKeyCart] = useState({});
   const [data, error] = useDbData('/Cart');
   // map of cart names and the stores under that cart 
@@ -26,9 +28,21 @@ const GoShoppingPage = () => {
       return;
     }
 
-        if (data && typeof data === 'object') {
+    if (data && typeof data === 'object' && currentUser) {
             const allCarts = Object.values(data);
             const allKeys = Object.keys(data);
+
+            const userId = currentUser.uid; 
+            const userName = currentUser.displayName; 
+
+            const filteredKeys = [];
+            const filteredCarts = [];
+            allCarts.forEach((cart, idx) => {
+                if( cart.users && cart.users.some(user => user.id === userId || user.displayName === userName) ){
+                    filteredKeys.push(allKeys[idx]);
+                    filteredCarts.push(cart);
+                }
+            });
 
             // Create new objects for `keyCart`, `cartDestinationMap`, `cartOptions`, and `destinationOptions`
             const newKeyCart = {};
@@ -36,9 +50,11 @@ const GoShoppingPage = () => {
             const newCartOptions = [];
             const newDestinationOptions = [];
 
-            allCarts.forEach((c, index) => {
-                newKeyCart[c.title] = allKeys[index];
-                newCartDestinationMap[c.title] = c.shoppingStores;
+            filteredCarts.forEach((c, index) => {
+                newKeyCart[c.title] = filteredKeys[index];
+                if (c.shoppingStores) {
+                    newCartDestinationMap[c.title] = c.shoppingStores;
+                }
                 newCartOptions.push(c.title);
 
                 {c.shoppingStores && c.shoppingStores.forEach((store) => {
@@ -59,6 +75,8 @@ const GoShoppingPage = () => {
         const cartsOnly = cart.slice(1);
         const destOnly = destination.slice(1);
         const cartKeysOnly = cartsOnly.map((c) => keyCart[c]);
+
+        console.log(`cart keys only ${cartKeysOnly} destination ${destOnly}`);
         navigate('/go-shopping/checklist', { state: { destOnly, cartKeysOnly } } );
         setDestination(["Select Destination"]);
         setCart(["Select Cart"])
@@ -70,7 +88,9 @@ const GoShoppingPage = () => {
         setDestination(destination);
         // create a new list of carts, that include the selected destination
         const newCart = [];
-        Object.keys(cartDestinationMap).forEach((cartOption) => {
+        console.log((cartDestinationMap));
+        Object.keys(cartDestinationMap).map((cartOption) => {
+            console.log(cartOption);
             if (cartDestinationMap[cartOption].includes(destination[1]) || cartDestinationMap[cartOption].includes('Any Store')) {
                 newCart.push(cartOption);
             } else if (cart.includes(cartOption)) {

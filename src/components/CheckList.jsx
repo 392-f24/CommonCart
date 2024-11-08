@@ -24,8 +24,12 @@ function CheckList() {
     // Filter carts by cartKeysOnly and destination
     const filteredCarts = Object.entries(cartData)
       .filter(([cartId]) => cartKeysOnly.includes(cartId))
-      .filter(([, cartData]) => cartData.shoppingStores.includes(destOnly[0]) ||
-        cartData.shoppingStores.includes('Any Store'));
+      .filter(([, cartData]) => {
+        if (cartData.shoppingStores){
+          return(
+            cartData.shoppingStores.includes(destOnly[0]) || cartData.shoppingStores.includes('Any Store')
+          )
+        }});
 
 
     // Extract items with status false from filtered carts
@@ -82,39 +86,27 @@ function CheckList() {
 
     updateSummaries({ [newSummaryId]: summaryData });
 
+    // Retrieve the users who belong to each cart in cartKeysOnly
+    const userIdsToUpdate = new Set();
 
-    /////////////////////////////////////////////////////////////////
-    /// Will switch to this implementation once we add users to carts
-    /////////////////////////////////////////////////////////////////
+    cartKeysOnly.forEach(cartId => {
+      const cart = cartData[cartId];
+      if (cart && cart.users) {
+        cart.users.forEach(user => userIdsToUpdate.add(user.id));
+      }
+    });
 
-    // // Retrieve the users who belong to each cart in cartKeysOnly
-    // const userIdsToUpdate = new Set();
+    console.log('userIdsToUpdate:', userIdsToUpdate);
 
-    // cartKeysOnly.forEach(cartId => {
-    //   const cart = cartData[cartId];
-    //   if (cart && cart.users) {
-    //     cart.users.forEach(userId => userIdsToUpdate.add(userId));
-    //   }
-    // });
+    // Update each user's summaries with the new summary ID
+    userIdsToUpdate.forEach(userId => {
+      const userSummaryPath = `/${userId}/summaries`;
+      const existingSummaries = userData?.summaries || [];
+      const updatedSummaries = [...existingSummaries, newSummaryId];
 
-    // // Update each user's summaries with the new summary ID
-    // userIdsToUpdate.forEach(userId => {
-    //   const userSummaryPath = `/${userId}/summaries`;
-    //   const existingSummaries = userData?.summaries || [];
-    //   const updatedSummaries = [...existingSummaries, newSummaryId];
-
-    //   updateUserSummaries({
-    //     [userSummaryPath]: updatedSummaries
-    //   });
-    // });
-
-    // Update user's summaries list
-    const currentSummaries = userData?.summaries || [];
-    const updatedSummaries = [...currentSummaries, newSummaryId];
-
-    const userSummaryPath = `/${user.uid}/summaries`;
-    updateUserSummaries({
-      [userSummaryPath]: updatedSummaries
+      updateUserSummaries({
+        [userSummaryPath]: updatedSummaries
+      });
     });
 
     // Update cart items and manage store updates

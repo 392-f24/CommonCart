@@ -1,96 +1,108 @@
 /* Overlay for the modal to darken the background */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it overlays other content */
-  }
-  
-  /* Modal container */
-  .modal-content {
-    background-color: #F5EDE0;
-    padding: 20px;
-    border-radius: 10px;
-    width: 500px;
-    height: 500px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    position: relative;
-    display: flex;
-    flex-direction: column; /* Arrange content vertically */
-    justify-content: space-between; /* Space content evenly */
-  }
-  
-  /* Close button in the top-right corner */
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
-  
-  /* Modal title */
-  .modal-content h2 {
-    text-align: center;
-    margin-bottom: 15px;
-    font-family: 'Josefin Sans';
-    color: #334256;
-  }
-  
-  /* Input for the cart name */
-  .cart-name-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: auto; /* Push button to the bottom */
-  }
-  
-  /* Create button inside the modal */
-  .create-button {
-    background-color: #FAC16B;
-    color: #000000;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-family: 'Josefin Sans';
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
-    width: 100%;
-  }
-  
-  .create-button:hover {
-    background-color: #d28c4c;
-  }
-  
-  /* Search bar container */
-  .search-bar {
-    display: flex;
-    align-items: center;
-    border: 2px solid #ccc;
-    border-radius: 25px;
-    overflow: hidden;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it overlays other content */
+}
+
+/* Modal container */
+.modal-content {
+  background-color: #F5EDE0;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+  height: 500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Arrange content vertically */
+  justify-content: space-between; /* Space content evenly */
+}
+
+/* Close button in the top-right corner */
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+/* Modal title */
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-family: 'Josefin Sans';
+  color: #334256;
+}
+
+/* Input for the cart name */
+.cart-name-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Description input */
+.cart-description-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Button container for alignment */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: auto; /* Push button to the bottom */
+}
+
+/* Create button inside the modal */
+.create-button {
+  background-color: #FAC16B;
+  color: #000000;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Josefin Sans';
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.create-button:hover {
+  background-color: #d28c4c;
+}
+
+/* Search bar container */
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  overflow: hidden;
+}
 
 /* Search input field */
 .search-input {
@@ -114,10 +126,8 @@
   border-bottom-right-radius: 25px;
 }
 
-
 .search-container {
   position: relative; /* Anchor dropdown relative to the search bar */
-  
 }
 
 /* Dropdown container for users */
@@ -137,32 +147,40 @@
   z-index: 2; /* Ensure it overlays other elements */
 }
 
-.store-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: #F5EDE0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  list-style-type: none;
-  padding: 10px 0;
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 2;
-}
 
+/* Added users container - compact and horizontal */
 .added-users-container {
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap to the next line */
-  gap: 10px; /* Space between items */
-  margin-top: 15px; /* Margin from the top */
+  gap: 5px; /* Reduced gap for compact layout */
+  margin-top: 10px; /* Margin from the top */
+  align-items: center; /* Center items vertically */
 }
 
-.added-stores-container {
+/* Added item (user) style */
+.added-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
+  align-items: center;
+  background-color: #EAE2D6;
+  padding: 4px 8px; /* Small padding for compactness */
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Josefin Sans';
+  color: #334256;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Name label in added item */
+.added-item-name {
+  margin-right: 6px;
+}
+
+/* Delete button for added item */
+.delete-button {
+  background: none;
+  border: none;
+  color: #FF6347;
+  font-size: 14px; /* Reduced font size */
+  cursor: pointer;
+  padding: 0;
 }

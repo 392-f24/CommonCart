@@ -34,10 +34,6 @@ const CartPage = () => {
     }
   }, [cartData, currentUser]);
 
-  const handleAddCart = (newCart) => {
-    setCarts([...carts, newCart]);
-  };
-
   return (
     <div className="cart-page">
       <h1>My Carts</h1>
@@ -68,7 +64,7 @@ const CartPage = () => {
         </div>
       </div>
 
-      <CreateCartModal show={showModal} onClose={() => setShowModal(false)} onAddCart={handleAddCart} />
+      <CreateCartModal show={showModal} onClose={() => setShowModal(false)}  />
     </div>
   );
 };
