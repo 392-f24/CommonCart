@@ -27,7 +27,7 @@ function CheckList() {
       .filter(([, cartData]) => {
         if (cartData.shoppingStores){
           return(
-            cartData.shoppingStores.includes(destOnly[0]) || cartData.shoppingStores.includes('Any Store')
+            cartData.shoppingStores.includes(destOnly[0]) || cartData.shoppingStores.includes('any store')
           )
         }});
 
@@ -35,7 +35,7 @@ function CheckList() {
     // Extract items with status false from filtered carts
     const initialItems = filteredCarts.flatMap(([cartId, cartData]) =>
       Object.entries(cartData.items)
-        .filter(([, itemData]) => itemData.status === false && (itemData.store === destOnly[0] || itemData.store === 'Any Store'))
+        .filter(([, itemData]) => itemData.status === false && (itemData.store === destOnly[0] || itemData.store === 'any store'))
         .map(([id, itemData]) => ({
           id,
           cartId,
@@ -126,11 +126,12 @@ function CheckList() {
     });
 
     // Remove store from shoppingStores if all items are shopped
-    if (!storeUpdates.includes(destOnly[0]) && !storeUpdates.includes('Any Store')) {
+    if (!storeUpdates.includes(destOnly[0]) && !storeUpdates.includes('any store')) {
+      console.log("removing a store");
       cartKeysOnly.forEach((key) => {
         const storesPath = `/${key}/shoppingStores`;
         const newStores = cartData[key].shoppingStores.filter(
-          store => store !== destOnly[0] && store !== 'Any Store'
+          store => store !== destOnly[0] && store !== 'any store'
         );
 
         updateData({ [storesPath]: newStores.length ? newStores : [] });
