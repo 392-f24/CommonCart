@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDbData } from '../utilities/firebase.js';
-import { BackButtonMyCart } from '../Components/Buttons.jsx';
+import { BackButtonMyCart, OrangeButton } from '../Components/Buttons.jsx';
 import './ShoppingListPage.css';
 import { useParams } from 'react-router-dom';
 import { useAuthState } from '../utilities/firebase.js';
 import AddToCartModal from '../components/AddToCart';
+import DeleteCartModal from '../Components/DeleteCartModal.jsx';
 
 const ShoppingListPage = () => {
   const [carts, cartsError] = useDbData('/Cart');
@@ -15,6 +16,8 @@ const ShoppingListPage = () => {
 
   const { title } = useParams();
   const [showAddCartModal, setAddCartModal] = useState(false);
+  const [showDeleteCartModal, setDeleteCartModal] = useState(false);
+
   const [cartId, setCartId] = useState(null);
 
   // Get initials from a name
@@ -43,6 +46,7 @@ const ShoppingListPage = () => {
       );
       if (matchingCart) {
         const [id, cartData] = matchingCart;
+        console.log(id);
         setCartId(id);
         setItems(cartData.items ? Object.values(cartData.items) : []);
       } else {
@@ -106,14 +110,24 @@ const ShoppingListPage = () => {
             </ul>
           )}
         </div>
-        <button className="create-cart-button" onClick={() => setAddCartModal(true)}>
-            Add Item to Cart
-        </button>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <OrangeButton title={"Add Item to Cart"} onClick={() => setAddCartModal(true)}/>
+          <OrangeButton title={"Delete Cart"} onClick={() => setDeleteCartModal(true)}/>
+        </div>
+
       </div>
 
       {showAddCartModal && (
         <AddToCartModal
           closeModal={() => setAddCartModal(false)}
+          cartId={cartId}
+          cartTitle={title}
+        />
+      )}
+
+      {showDeleteCartModal && (
+        <DeleteCartModal
+          closeModal={() => setDeleteCartModal(false)}
           cartId={cartId}
           cartTitle={title}
         />
