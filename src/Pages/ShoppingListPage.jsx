@@ -1,10 +1,12 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useDbData, useDbRemove, useDbUpdate } from '../utilities/firebase.js';
-import { BackButtonMyCart } from '../Components/Buttons.jsx';
+import { BackButtonMyCart, OrangeButton } from '../Components/Buttons.jsx';
 import './ShoppingListPage.css';
 import { useParams } from 'react-router-dom';
 import { useAuthState } from '../utilities/firebase.js';
 import AddToCartModal from '../components/AddToCart';
+import DeleteCartModal from '../Components/DeleteCartModal.jsx';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -23,6 +25,8 @@ const ShoppingListPage = () => {
 
   const { title } = useParams();
   const [showAddCartModal, setAddCartModal] = useState(false);
+  const [showDeleteCartModal, setDeleteCartModal] = useState(false);
+
   const [cartId, setCartId] = useState(null);
   const [sortOption, setSortOption] = useState('No Sorting');
 
@@ -53,6 +57,7 @@ const ShoppingListPage = () => {
       );
       if (matchingCart) {
         const [id, cartData] = matchingCart;
+        console.log(id);
         setCartId(id);
         setItems(cartData.items ? Object.entries(cartData.items).map(([key, value]) => ({ id: key, ...value })) : []);
       } else {
@@ -270,6 +275,7 @@ const ShoppingListPage = () => {
             )
           )}
         </div>
+// <<<<<<< Ziye
 
         {/* Add Item Button */}
         <button
@@ -278,6 +284,13 @@ const ShoppingListPage = () => {
         >
           Add Item to Cart
         </button>
+// =======
+//         <div style={{ display: "flex", justifyContent: "space-between" }}>
+//           <OrangeButton title={"Add Item to Cart"} onClick={() => setAddCartModal(true)}/>
+//           <OrangeButton title={"Delete Cart"} onClick={() => setDeleteCartModal(true)}/>
+//         </div>
+
+// >>>>>>> main
       </div>
 
       {/* Modal for adding an item */}
@@ -289,6 +302,16 @@ const ShoppingListPage = () => {
         />
       )}
 
+// <<<<<<< Ziye
+// =======
+      {showDeleteCartModal && (
+        <DeleteCartModal
+          closeModal={() => setDeleteCartModal(false)}
+          cartId={cartId}
+          cartTitle={title}
+        />
+      )}
+// >>>>>>> main
     </div>
   );
 };
