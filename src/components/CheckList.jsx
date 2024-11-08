@@ -40,8 +40,8 @@ function CheckList() {
           store: itemData.store,
           userAdded: itemData.userAdded,
           userFulfilled: itemData.userFulfilled,
-          quantityItem: itemData.quantityItem || '', // Include quantity
-          notes: itemData.notes || '' // Include notes
+          quantityItem: itemData.quantityItem || '', 
+          notes: itemData.notes || ''
         }))
     );
     

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDbData, useDbRemove, useDbUpdate } from '../utilities/firebase.js';
 import { BackButtonMyCart } from '../Components/Buttons.jsx';
 import './ShoppingListPage.css';
@@ -33,7 +33,7 @@ const ShoppingListPage = () => {
   };
 
   // Color mapping
-  const colorMap = {};
+  // const colorMap = {};
   const pastelGreen = '#A8E6CF';
 
   useEffect(() => {
@@ -64,36 +64,35 @@ const ShoppingListPage = () => {
   const currentUserId = user ? user.uid : null;
 
   const [updateData] = useDbUpdate(`/Cart/${cartId}`);
+
   const handleDelete = async (itemId) => {
     if (!cartId || !itemId) return;
     const item = items.find((item) => item.id === itemId);
-
+  
     if (item && item.userAdded === currentUserId) {
       const itemStore = item.store.toLowerCase();
-
+  
       try {
+        // Step 1: Delete the item from the cart
         await removeItem(`/Cart/${cartId}/items/${itemId}`);
+  
+        await new Promise((resolve) => setTimeout(resolve, 200));
+  
         const updatedCartSnapshot = await useDbData(`/Cart/${cartId}`);
         const updatedCartData = updatedCartSnapshot || {};
+  
         const remainingItems = updatedCartData.items
           ? Object.values(updatedCartData.items)
           : [];
-
-        const remainingItemsWithStore = remainingItems.filter(
-          (otherItem) => otherItem.store.toLowerCase() === itemStore
-        );
-
-        if (remainingItemsWithStore.length === 0) {
-          const updatedStores = updatedCartData.shoppingStores
-            ? updatedCartData.shoppingStores.filter(
-                (store) => store.toLowerCase() !== itemStore
-              )
-            : [];
-          await updateData(`/Cart/${cartId}`, {
-            shoppingStores: updatedStores.length > 0 ? updatedStores : ['Any Store']
-          });
-        }
-
+  
+        const updatedStores = [
+          ...new Set(remainingItems.map((otherItem) => otherItem.store.toLowerCase()))
+        ];
+  
+        const finalStores = updatedStores.length > 0 ? updatedStores : ['any store'];
+  
+        await updateData(`/Cart/${cartId}`, { shoppingStores: finalStores });
+  
         setItems(remainingItems);
       } catch (error) {
         console.error("Error deleting item or updating stores:", error);
@@ -102,6 +101,10 @@ const ShoppingListPage = () => {
       console.error("You don't have permission to delete this item.");
     }
   };
+  
+  
+
+  
   
   
 
@@ -160,6 +163,16 @@ const ShoppingListPage = () => {
       ));
     };
 
+    const getRandomPastelColor = () => {
+      const r = Math.floor(Math.random() * 128 + 127);
+      const g = Math.floor(Math.random() * 128 + 127);
+      const b = Math.floor(Math.random() * 128 + 127);
+      return `rgb(${r}, ${g}, ${b})`;
+    };
+    
+
+
+    const colorMap = useRef({});
 
     const renderItem = (item) => {
       if (!item || typeof item !== 'object') return null;
@@ -169,9 +182,16 @@ const ShoppingListPage = () => {
       const initials = getInitials(addedByName);
       const fulfilledByName = item.userFulfilled ? userMap[item.userFulfilled] : null;
     
+      // Assign a color if not already assigned
+      if (!colorMap.current[addedById]) {
+        colorMap.current[addedById] = getRandomPastelColor();
+      }
+    
+      const userColor = colorMap.current[addedById];
+    
       return (
         <li key={item.id} className="shoppinglist-item">
-          <div className="user-initial" style={{ backgroundColor: pastelGreen }}>
+          <div className="user-initial" style={{ backgroundColor: userColor }}>
             {initials}
           </div>
           <div className="shoppinglist-details">
@@ -202,6 +222,7 @@ const ShoppingListPage = () => {
         </li>
       );
     };
+    
     
   
     const sortedItems = sortItems(items);
